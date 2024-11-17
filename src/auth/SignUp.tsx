@@ -56,7 +56,7 @@ function Signup() {
       <div className="title-wrapper ">
         <h1 className="text-white text-3xl md:text-6xl  font-bold " style={{ fontFamily: 'Sixtyfour' }}>DEBEX</h1>
       </div>
-      <div className="card border rounded-lg h-auto w-full md:w-2/5 px-6 py-6">
+      <div className="card border rounded-lg h-auto w-full md:w-1/2  px-6 py-6">
         <div className="card-title text-left text-white flex flex-col gap-y-1 mb-5 ">
           <h1 className="text-3xl font-varela font-bold">Sign Up</h1>
           <p className="text-sm font-varela">Welcome back! Sign in to track your expenses and debt</p>

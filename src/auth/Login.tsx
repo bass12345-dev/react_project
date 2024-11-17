@@ -25,7 +25,7 @@ function Login() {
           <div className="flex justify-center gap-x-2">
                     <a href="#" className="text-orange-100 text-sm">Forgot Password?</a>
                     <Link to={`../signup`} className="text-sm text-blue-400 underline underline-offset-4" >Sign up</Link>
-                    <Link to={`../`} className="text-sm text-blue-400 underline underline-offset-4" >Dashboard</Link>
+                    <Link to={`../debt`} className="text-sm text-blue-400 underline underline-offset-4" >Dashboard</Link>
           </div>
           <button type="submit" className="text-white  hover:bg-yellow-200 border hover:text-black px-12 py-2 text-sm font-bold rounded-lg w-full mt-2">Continue With Google</button>
         </form>
