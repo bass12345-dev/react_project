@@ -3,7 +3,7 @@ export function findInputError(errors:any,name:any){
     .filter(key => key.includes(name))
     .reduce((cur, key) => {
         return Object.assign(cur,{error:errors[key]})
-    }, {});
+    }, {error:{message:''}});
     return filtered;
 }
 

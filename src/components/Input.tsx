@@ -26,7 +26,7 @@ export const Input = ({
 
       const inputError = findInputError(errors, name)
       const isInvalid = isFormInvalid(inputError)
-
+      console.log(inputError)
     
    return(
      <div className="flex flex-col gap-y-1">
@@ -57,7 +57,7 @@ export const Input = ({
         className="flex items-center gap-1 px-2 font-semibold text-red-500 bg-red-100 rounded-md justify-center"
         {...framer_error}
       >
-       <p >{message}</p> 
+       {message}
       </motion.p>
     )
   }
