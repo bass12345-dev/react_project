@@ -15,6 +15,7 @@ export const Input = ({
    id: string;
    placeholder: string;
    name: string;
+   
    validation : any
  }) => {
 
@@ -24,28 +25,25 @@ export const Input = ({
       } = useFormContext()
 
 
-      const inputError = findInputError(errors, name)
+      const inputError = findInputError(errors, name, label)
       const isInvalid = isFormInvalid(inputError)
       console.log(inputError)
     
    return(
      <div className="flex flex-col gap-y-1">
-       <label htmlFor="first_name" className="text-white text-md text-left font-varela">{label}
-
-       <AnimatePresence mode="wait" initial={false}>
+       <label htmlFor="first_name" className="text-white text-md text-left font-varela">{label}</label>
+       <input id={id} type={type} placeholder={placeholder}  className="bg-gray-50 mx-0 border border-gray-300 text-gray-900 text-sm font-varela rounded-lg w-full p-2"
+       {...register(name,validation)}
+       
+       />
+         <AnimatePresence mode="wait" initial={false}>
           {isInvalid && (
             <InputError
-              message={inputError.error.message}
+              message={` ${inputError.label} ${inputError.error.message}`}
               key={inputError.error.message}
             />
           )}
         </AnimatePresence>
-
-
-       </label>
-       <input id={id} type={type} placeholder={placeholder}  className="bg-gray-50 mx-0 border border-gray-300 text-gray-900 text-sm font-varela rounded-lg w-full p-2"
-       {...register(name,validation)}
-       />
      </div>
    )
  }
