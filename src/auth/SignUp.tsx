@@ -8,14 +8,11 @@ import { useState } from 'react'
 import { Alerts, Loader, ToggleShowPassword } from "../components/Alerts";
 import { use } from "framer-motion/client";
 import bcrypt from "bcryptjs";
-
-
+import { GoogleAuth } from "./GoogleAuth/GoogleAuth"
+import emailjs from '@emailjs/browser'
 function Signup() {
 
   const methods = useForm();
-  const name_validation = NameValidation;
-  const email_validation = EmailValidation;
-  const password_validation = PasswordValidation;
 
   const [message, setAlertMessage] = useState('');
   const [bg, setAlertBG] = useState('');
@@ -63,13 +60,32 @@ function Signup() {
             .from('users')
             .insert([UserInfo]);
               if (error) {
-                alert(`Error: ${error.message}`);
                 setAlertMessage(`${error.message}`)
                 setAlertBG('bg-red-500');
               } else {
-                setAlertMessage(`User Created Successfully`)
-                setAlertBG('bg-green-500')
+                const EmailParams = { subject: 'Email Verification',message: ' <a href="https://yourverificationlink.com" style="background-color: #28a745; color: white; padding: 12px 30px; text-decoration: none; font-size: 16px; border-radius: 4px;">Verify Email</a>',
+                  to_name: UserInfo.first_name,
+                };
+                var email_message = '';
+                emailjs.send('service_avqi5jg', 'template_fyn245d', EmailParams,'9hzUIqFTPTWKOWgq_').then(
+                  (response) => {
+                    if(response.status == 200) {
+                      email_message = 'Email has sent to you please verify your email.';
+                    }
+                    console.log('SUCCESS!', response.status, response.text);
+                  },
+                  (error) => {
+                    if(error){
+                      email_message = '';
+                    }
+                    
+                  },
+                );
+
+                setAlertMessage(`Account Created Successfully... ${email_message}`)
+                setAlertBG('bg-green-500');
                 methods.reset();
+                
               }
         }else{
           setAlertMessage(`Email is used already`)
@@ -99,14 +115,14 @@ function Signup() {
 
         <FormProvider {...methods}>
           <form className="flex flex-col gap-y-4" id="signup-form" onSubmit={e => e.preventDefault()}>
-            <Input label="First Name" type="text" id="first_name" name="first_name" placeholder="Type your First Name" validation={{ ...name_validation }} />
-            <Input label="Last Name" type="text" id="last_name" name="last_name" placeholder="Type your Last Name" validation={{ ...name_validation }} />
-            <Input label="Email Address" type="email" id="email" name="email" placeholder="Type your Email Address" validation={{ ...email_validation }} />
+            <Input label="First Name" type="text" id="first_name" name="first_name" placeholder="Type your First Name" validation={{ ...NameValidation }} />
+            <Input label="Last Name" type="text" id="last_name" name="last_name" placeholder="Type your Last Name" validation={{ ...NameValidation }} />
+            <Input label="Email Address" type="email" id="email" name="email" placeholder="Type your Email Address" validation={{ ...EmailValidation }} />
             <div className="password-container relative">
-              <Input label="Password" type="password" id="password" name="password" placeholder="Type your Password" validation={{ password_validation }} />
+              <Input label="Password" type="password" id="password" name="password" placeholder="Type your Password" validation={{ ...PasswordValidation }} />
               <ToggleShowPassword />
             </div>
-            <Input label="Confirm your Password" type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" validation={{ ...password_validation }} />
+            <Input label="Confirm your Password" type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" validation={{ ...PasswordValidation }} />
             <div className="loader" hidden={!is_disabled}>
                 <Loader/>
             </div>
@@ -114,7 +130,7 @@ function Signup() {
             <div className="flex justify-center gap-x-2">
               <Link to={`../login`} className="text-sm text-blue-400 underline underline-offset-4" >Back to Login</Link>
             </div>
-            <button type="button" className="text-white  hover:bg-yellow-200 border hover:text-black px-12 py-2 text-sm font-bold rounded-lg w-full mt-2">Continue With Google</button>
+            <GoogleAuth/>
           </form>
         </FormProvider>
       </div>

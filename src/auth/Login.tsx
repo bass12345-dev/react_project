@@ -1,6 +1,18 @@
 import { Link } from "react-router-dom"
-
+import { GoogleAuth } from "./GoogleAuth/GoogleAuth"
+import { Input } from "../components/Input"
+import { EmailValidation, NameValidation, PasswordValidation } from "../utils/InputValidations";
+import { Alerts, Loader, ToggleShowPassword } from "../components/Alerts";
+import { FormProvider, useForm } from "react-hook-form";
+import { useState } from 'react'
 function Login() {
+  const methods = useForm();
+  const [is_hidden, setHidden] = useState(false);
+  
+  const onSubmit = methods.handleSubmit(async loginData => {
+    setHidden(true);
+
+  });
 
   return (
     <div className="login-card card flex flex-col justify-center gap-y-4 px-5  items-center mt-5 ">
@@ -12,23 +24,25 @@ function Login() {
           <h1 className="text-3xl font-roboto font-bold">Sign In</h1>
           <p className="text-sm font-roboto">Welcome back! Sign in to track your expenses and debt</p>
         </div>
-        <form className="flex flex-col gap-y-4">
-          <div className="flex flex-col gap-y-1">
-            <label htmlFor="email" className="text-white text-md text-left" style={{ fontFamily: 'Varela Round' }} >Email</label>
-            <input type="email" id="email" placeholder="Enter your Email" className="bg-gray-50 mx-0 border  border-gray-300 text-gray-900 text-sm   rounded-lg w-full p-2" style={{ fontFamily: 'Varela Round' }} required/>
-          </div>
-          <div className="flex flex-col gap-y-1">
-            <label htmlFor="email" className="text-white text-md text-left" style={{ fontFamily: 'Varela Round' }} >Password</label>
-            <input type="email" id="email" placeholder="Enter your Email" className="bg-gray-50 mx-0 border  border-gray-300 text-gray-900 text-sm   rounded-lg w-full p-2" style={{ fontFamily: 'Varela Round' }} required/>
-          </div>
-          <button type="submit" className="text-white bg-red-900 hover:bg-red-500 px-12 py-2 text-sm font-bold rounded-lg w-full mt-2">LOGIN</button>
-          <div className="flex justify-center gap-x-2">
-                    <a href="#" className="text-orange-100 text-sm">Forgot Password?</a>
-                    <Link to={`../signup`} className="text-sm text-blue-400 underline underline-offset-4" >Sign up</Link>
-                    <Link to={`../debt`} className="text-sm text-blue-400 underline underline-offset-4" >Dashboard</Link>
-          </div>
-          <button type="submit" className="text-white  hover:bg-yellow-200 border hover:text-black px-12 py-2 text-sm font-bold rounded-lg w-full mt-2">Continue With Google</button>
-        </form>
+        <FormProvider {...methods}>
+          <form className="flex flex-col gap-y-4 relative">
+              <Input label="Email Address" type="email" id="email" name="email" placeholder="Type your Email Address" validation={{ ...[]}} />
+              <div className="password-container relative">
+                <Input label="Password" type="password" id="password" name="password" placeholder="Type your Password" validation={{ ...[] }} />
+                <ToggleShowPassword />
+              </div>
+            <div className="loader absolute top-[90px] left-1/2 transform -translate-x-1/2 -translate-y-90px" hidden={!is_hidden}>
+                <Loader/>
+            </div>
+            <button type="button" hidden={is_hidden} onClick={onSubmit} className="text-white bg-red-900 hover:bg-red-500 px-12 py-2 text-sm font-bold rounded-lg w-full mt-2">Submit</button>
+            <div className="flex justify-center gap-x-2">
+                      <a href="#" className="text-orange-100 text-sm">Forgot Password?</a>
+                      <Link to={`../signup`} className="text-sm text-blue-400 underline underline-offset-4" >Sign up</Link>
+                      {/* <Link to={`../debt`} className="text-sm text-blue-400 underline underline-offset-4" >Dashboard</Link> */}
+            </div>
+            <GoogleAuth/>
+          </form>
+        </FormProvider>
       </div>
     </div>
   )

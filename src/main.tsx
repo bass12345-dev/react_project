@@ -10,6 +10,10 @@ import Login from "./auth/Login";
 import Signup from "./auth/SignUp";
 import Debt from "./pages/Debt";
 import Expenses from "./pages/Expenses";
+import { GoogleOAuthProvider } from "@react-oauth/google"
+const clientId = '621336373431-t4bk00pheghbibij0nab5ovpfuql7i6q.apps.googleusercontent.com';
+
+
 
 const router = createBrowserRouter([
   //Auth
@@ -41,8 +45,15 @@ const router = createBrowserRouter([
   },
 ]);
 
+// ReactDOM.createRoot(document.getElementById("root")!).render(
+//   <React.StrictMode>
+//     <RouterProvider router={router} />
+//   </React.StrictMode>
+// );
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-);
+  <GoogleOAuthProvider clientId={clientId}>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>,
+  </GoogleOAuthProvider>
+  );
