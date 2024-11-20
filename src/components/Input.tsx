@@ -27,7 +27,7 @@ export const Input = ({
 
       const inputError = findInputError(errors, name, label)
       const isInvalid = isFormInvalid(inputError)
-      console.log(inputError)
+     
     
    return(
      <div className="flex flex-col gap-y-1">
