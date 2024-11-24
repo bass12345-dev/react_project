@@ -22,11 +22,6 @@ function Signup() {
 
 
 
-  // const [verificationStatus, setVerificationStatus] = useState("");
-  // const handleVerify = async () => {
-  //   const isMatch = await bcrypt.compare(password, hashedPassword);
-  //   setVerificationStatus(isMatch ? "Password matches!" : "Password does not match.");
-  // };
 
   const onSubmit = methods.handleSubmit(async data1 => {
     // Show Alert
