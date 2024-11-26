@@ -1,18 +1,46 @@
 import { Button, Checkbox, Label, Modal, Textarea, TextInput } from "flowbite-react";
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Select from 'react-select'
+import { getpayToItems } from "../../../../service/Service";
+import { PaytoItem } from "../../../../utils/Types";
+import { paytoDB, supabase } from "../../../../utils/supabase";
 
 export const AddDebtModal = ({ openModal, ToggleModal }: { openModal: any, ToggleModal: any }) => {
 
+    
+    // const options = [
+    //     { value: 'chocolate', label: 'Chocolate' },
+    //     { value: 'strawberry', label: 'Strawberry' },
+    //     { value: 'vanilla', label: 'Vanilla' }
+    // ]
+    const [pay_to, setPayTo] = useState<PaytoItem[]>([]);
+    
+    //<!------------------ Fetch Data ---------------------!>
+  
+  const getpayTo = async() => {
+    let items_arr:any = [];
+    if((await getpayToItems()).length > 0){
+    // Fetching data from the database and setting it to state
+        let items = await getpayToItems();
+        items.forEach((item: PaytoItem) => {
+            items_arr.push({ value: item.payto_id, label: item.first_name });
+        });
 
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-      ]
+        setPayTo(items_arr);
+      
+      }else{
+        setPayTo([]);
+      }
+    }
+  
+  useEffect(() => {
+    getpayTo();
+    
+  }, []);
 
 
-    // onClose={() => setOpenModal(false)}
+
+   
     return (
         <>
 
@@ -27,14 +55,14 @@ export const AddDebtModal = ({ openModal, ToggleModal }: { openModal: any, Toggl
                                 <div className="mb-2 block">
                                     <Label htmlFor="password" value="Reason" />
                                 </div>
-                                <Textarea id="password"  required />
+                                <Textarea id="password" required />
                             </div>
 
                             <div>
                                 <div className="mb-2 block">
                                     <Label htmlFor="password" value="Pay to" />
                                 </div>
-                                <Select options={options} />
+                                <Select options={pay_to} />
                             </div>
 
                             <div>

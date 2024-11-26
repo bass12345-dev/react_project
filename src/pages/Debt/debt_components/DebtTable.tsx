@@ -1,15 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Checkbox, Label, Modal, TextInput } from "flowbite-react";
 import { AddDebtModal } from './modals/AddDebtModal';
+import { paytoDB, supabase } from '../../../utils/supabase';
+import { PaytoItem } from '../../../utils/Types';
 export const DebtTable = ({debt}:{debt:any}) => {
 
 
     const [openModal, setOpenModal] = useState(false);
-
+   
 
     const ToggleModal = () =>  {
         setOpenModal(!openModal);
     }
+
+    
+
+
 
     return (
         <>

@@ -1,27 +1,19 @@
 import { useState } from 'react'
-import { supabase } from '../../utils/supabase'
+import { paytoDB, supabase } from '../../utils/supabase'
 import { useEffect } from 'react'
 import { Cards } from '../../components/Cards';
 import { Logs } from './debt_components/Logs';
 import { DebtTable } from './debt_components/DebtTable';
 import { AddDebtModal } from './debt_components/modals/AddDebtModal';
+import { DebtItem, PaytoItem } from '../../utils/Types';
+import { getpayToItems } from '../../service/Service';
 
 
 function Debt() {
   
-  // Define a type based on your `deb_exp` table's structure
-  type DebtItem = {
-    deb_exp_id: string;
-    total_amount: number;
-    pay_to: string;
-    reason: string;
-    type: string;
-    date: string;
-    time: string; // Add other fields based on your table
-    // Add other fields based on your table
-  };
 
   const [debt, setDebt] = useState<DebtItem[]>([]);
+
 
   async function getDebt() {
     const { data: debtData, error } = await supabase.from('deb_exp').select()
@@ -39,9 +31,12 @@ function Debt() {
 
 
   useEffect(() => {
-    getDebt()
+    getDebt();
+  
+    
   }, [])
   
+ 
   
 
   return (

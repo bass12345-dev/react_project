@@ -102,7 +102,7 @@ function Signup() {
       <div className="card border rounded-lg h-auto w-full md:w-1/2  px-6 py-6">
         <div className="card-title text-left text-white flex flex-col gap-y-1 mb-5 ">
           <h1 className="text-3xl font-varela font-bold">Sign Up</h1>
-          <p className="text-sm font-varela">Welcome back! Sign in to track your expenses and debt</p>
+          <p className="text-sm font-varela">Welcome back! Sign Up to track your expenses and debt</p>
         </div>
         <div className={hidden ? "hidden" : ""}>
           <Alerts message={message} bg={bg} />

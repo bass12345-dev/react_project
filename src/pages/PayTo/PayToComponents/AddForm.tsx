@@ -2,28 +2,25 @@
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { paytoDB, supabase } from './../../../utils/supabase'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Loader } from "../../../components/Alerts";
 import { Spinner } from "flowbite-react";
 import SweetAlert2 from 'react-sweetalert2';
-export const AddForm = () => {
+import { PayToInputs, PaytoItem } from "../../../utils/Types";
+export const AddForm = ({getpayTo}:{getpayTo:any}) => {
+    
     const [loader, setLoader] = useState(false);
     const [swalProps, setSwalProps] = useState({});
-    type Inputs = {
-        first_name: string,
-        last_name: string,
-        phone_number: string,
-      }
+    
 
-
-      const {
+    const {
         handleSubmit,
         register,
         reset,
-      } = useForm<Inputs>()
-      const onSubmit: SubmitHandler<Inputs> = (data) => InsertData(data)
+    } = useForm<PayToInputs>()
+    const onSubmit: SubmitHandler<PayToInputs> = (data) => InsertData(data)
 
-    
+    //<!------------------ Insert Data ---------------------!>
     async function InsertData(data:any){
         setLoader(true);
         const { error } = await supabase
@@ -37,10 +34,14 @@ export const AddForm = () => {
             });
             setLoader(false);
             reset();
+            getpayTo();
         }else{
             setLoader(false);
         }
     }
+
+
+  
 
     return (
         <div className="card bg-debexLightBlue border rounded-lg h-auto md:w-1/3  sm:w-full px-6 py-6">
@@ -66,6 +67,13 @@ export const AddForm = () => {
                         <Label htmlFor="last_name" value="Phone Number" />
                     </div>
                     <TextInput id="last_name" type="number" placeholder="09xxxxxxxx" {...register("phone_number")}  shadow />
+                </div>
+
+                <div>
+                    <div className="mb-2 block">
+                        <Label htmlFor="address" value="Address" />
+                    </div>
+                    <TextInput id="address" type="text" placeholder="USA" {...register("address")}  shadow />
                 </div>
                
                 <div>
