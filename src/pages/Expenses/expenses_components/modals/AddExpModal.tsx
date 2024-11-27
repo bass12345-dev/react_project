@@ -7,63 +7,66 @@ import { debex, debex_type, paytoDB, supabase} from "../../../../utils/supabase"
 import { SubmitHandler, useForm } from "react-hook-form";
 import withReactContent from 'sweetalert2-react-content'
 import Swal from "sweetalert2";
-export const AddDebtModal = ({ openModal, ToggleModal,getDebt }: { openModal: any, ToggleModal: any,getDebt:any }) => {
+export const AddExpModal = ({ openModal, ToggleModal, getExpenses }: { openModal: any, ToggleModal: any, getExpenses:any }) => {
 
-    
-    const [pay_to, setPayTo] = useState<PaytoItem[]>([]);
-    const [loader, setLoader] = useState(false);
+
     const [pay_to_who, setPayToPerson] = useState<String>('')
-     
+    const [loader, setLoader] = useState(false);
+
+
     //<!------------------ Fetch Data ---------------------!>
+    const [pay_to, setPayTo] = useState<PaytoItem[]>([]);
   
-  const getpayTo = async() => {
-    let items_arr:any = [];
-    if((await getpayToItems()).length > 0){
-    // Fetching data from the database and setting it to state
-        let items = await getpayToItems();
-        items.forEach((item: PaytoItem) => {
-            items_arr.push({ value: item.payto_id, label: item.first_name });
-        });
+    const getpayTo = async() => {
+        let items_arr:any = [];
+        if((await getpayToItems()).length > 0){
+        // Fetching data from the database and setting it to state
+            let items = await getpayToItems();
+            items.forEach((item: PaytoItem) => {
+                items_arr.push({ value: item.payto_id, label: item.first_name });
+            });
 
-        setPayTo(items_arr);
-      
-      }else{
-        setPayTo([]);
-      }
+            setPayTo(items_arr);
+        
+        }else{
+            setPayTo([]);
+        }
+        }
+    
+    useEffect(() => {
+        getpayTo();
+        
+    }, []);
+
+    const handleChange = (e:any) =>{
+        setPayToPerson(e.value)
     }
-  
-  useEffect(() => {
-    getpayTo();
-    
-  }, []);
-  //<!------------------ End---------------------!>
+    //<!------------------ END ---------------------!>
 
-  //<!------------------ Insert Data ---------------------!>
-  const {
-    handleSubmit,
-    register,
-    reset,
-} = useForm<DebtInputs>()
-const onSubmit: SubmitHandler<DebtInputs> = (data) => InsertData(data)
+    //<!------------------ Insert Data ---------------------!>
+    const {
+        handleSubmit,
+        register,
+        reset,
+    } = useForm<DebtInputs>()
+    const onSubmit: SubmitHandler<DebtInputs> = (data) => InsertData(data)
 
-
-    
     async function InsertData(data:any){
-
+        
         if(pay_to_who == ''){
             alert('Please select Payee')
             return;
         }
 
         let items = {
-            total_amount   : data.total_amount,
-            payto_id          : pay_to_who,
+            total_amount    : data.total_amount,
+            payto_id        : pay_to_who,
             reason          : data.reason,
-            type            : debex_type[0],
+            type            : debex_type[1],
             date            : data.date,
         }
 
-        setLoader(true);
+       setLoader(true);
         const { error } = await supabase
         .from(debex)
         .insert([items]);
@@ -77,33 +80,27 @@ const onSubmit: SubmitHandler<DebtInputs> = (data) => InsertData(data)
             )
             setLoader(false);
             reset();
-            getDebt();
+            getExpenses();
         }else{
             setLoader(false);
         }
     }
 
-    const handleChange = (e:any) =>{
-        setPayToPerson(e.value)
-    }
-
-  
 
     return (
         <>
-
             <Modal show={openModal} size="md" popup onClose={ToggleModal}  >
                 <Modal.Header />
                 <Modal.Body>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="space-y-6">
-                            <h3 className="text-xl font-medium text-gray-900 dark:text-white">Add Debt</h3>
+                            <h3 className="text-xl font-medium text-gray-900 dark:text-white">Add Expenses</h3>
 
                             <div>
                                 <div className="mb-2 block">
                                     <Label htmlFor="reason" value="Reason" />
                                 </div>
-                                <Textarea id="reason" required {...register("reason")} />
+                                <Textarea id="reason" required {...register("reason")}  />
                             </div>
 
                             <div>
@@ -130,7 +127,7 @@ const onSubmit: SubmitHandler<DebtInputs> = (data) => InsertData(data)
 
 
                             <div className="w-full flex justify-end">
-                                <Button type="submit" className="bg-debexPrimary hover:bg-red-500" disabled={loader} ><Spinner hidden={!loader} aria-label="Default status example" />{!loader ? 'Add' : ''}</Button>
+                            <Button type="submit" className="bg-debexPrimary hover:bg-red-500" disabled={loader} ><Spinner hidden={!loader} aria-label="Default status example" />{!loader ? 'Add' : ''}</Button>
                             </div>
 
                         </div>

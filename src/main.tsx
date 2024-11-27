@@ -11,7 +11,7 @@ import DebexMainLayout from "./DebexMainLayout";
 import Login from "./auth/Login";
 import Signup from "./auth/SignUp";
 import Debt from "./pages/Debt/Debt";
-import Expenses from "./pages/Expenses";
+import Expenses from "./pages/Expenses/Expenses";
 import { GoogleOAuthProvider } from "@react-oauth/google"
 import ProtectedRoute from "./auth/Protected/ProtectedRoute";
 import Is_LoggedIn from "./auth/Protected/Is_LoggedIn";

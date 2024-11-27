@@ -15,7 +15,7 @@ export const getpayToItems = async() => {
 
   // <!-------------Debt Service-----------------!>
 
-  export const getDebtItems = async() => {
+  export const getDebexItems = async(type:any) => {
     const { data: debtData, error } = await supabase.from(debex).select(
       `
       deb_exp_id,
@@ -26,7 +26,7 @@ export const getpayToItems = async() => {
       date,
       ${paytoDB}(first_name,last_name)
      `
-    ).order('date', { ascending: false })
+    ).eq('type', type).order('date', { ascending: false })
     if (error) {
       return [];
     } else {

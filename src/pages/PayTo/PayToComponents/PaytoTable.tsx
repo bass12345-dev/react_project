@@ -7,7 +7,7 @@ import { td_classes } from '../../../utils/_Classes';
 
 export const PaytoTable = ({ pay_to, getpayTo }: { pay_to: any,getpayTo:any }) => {
 
-    let table_headers   =  [{ name: "Full Name"},{ name: "Phone Number"}, {name: "Address"},{name: "Total Debt"},{name: "Balance"},{ name: "Action"}]
+    let table_headers   =  [{ name: "Full Name"},{ name: "Phone Number"}, {name: "Address"},{ name: "Action"}]
 
     // <!----------------Remove---------------!>
     const remove = (row: any) => {
@@ -77,12 +77,7 @@ export const PaytoTable = ({ pay_to, getpayTo }: { pay_to: any,getpayTo:any }) =
                                     <td scope="row" className={td_classes}>
                                         {row.address}
                                     </td>
-                                    <td scope="row" className={td_classes}>
-                                        0
-                                    </td>
-                                    <td scope="row" className={td_classes}>
-                                        0
-                                    </td>
+                                 
 
                                     <td className="px-6 py-4">
                                         <a href="#"
