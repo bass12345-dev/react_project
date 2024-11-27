@@ -16,7 +16,7 @@ export const menu = [
     },
     {
       path: "/pay_to", 
-      name: "Pay to Records",
+      name: "Payee Records",
       classname : 'font-varela font-bold hover:text-red-700 text-lg' 
     }
   ];

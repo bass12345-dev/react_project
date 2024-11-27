@@ -3,18 +3,14 @@
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { paytoDB, supabase } from '../../../utils/supabase';
+import { td_classes } from '../../../utils/_Classes';
 
 export const PaytoTable = ({ pay_to, getpayTo }: { pay_to: any,getpayTo:any }) => {
 
     let table_headers   =  [{ name: "Full Name"},{ name: "Phone Number"}, {name: "Address"},{name: "Total Debt"},{name: "Balance"},{ name: "Action"}]
-    let td_class        = `px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white `;
 
     // <!----------------Remove---------------!>
     const remove = (row: any) => {
-        // getpayTo(pay_to.filter((item: any) => item.payto_id!== id));
-
-        console.log(row)
-       
         withReactContent(Swal).fire({
                 title: "Do you want to Remove?",
                 text: row.first_name+' '+row.last_name,
@@ -72,19 +68,19 @@ export const PaytoTable = ({ pay_to, getpayTo }: { pay_to: any,getpayTo:any }) =
                         <tbody>
                             {pay_to.map((row: any) => (
                                 <tr key={row.payto_id}>
-                                    <td scope="row" className={td_class + `font-bold`}>
+                                    <td scope="row" className={td_classes + `font-bold`}>
                                         {row.first_name} {row.last_name}
                                     </td>
-                                    <td scope="row" className={td_class}>
+                                    <td scope="row" className={td_classes}>
                                         {row.phone_number}
                                     </td>
-                                    <td scope="row" className={td_class}>
+                                    <td scope="row" className={td_classes}>
                                         {row.address}
                                     </td>
-                                    <td scope="row" className={td_class}>
+                                    <td scope="row" className={td_classes}>
                                         0
                                     </td>
-                                    <td scope="row" className={td_class}>
+                                    <td scope="row" className={td_classes}>
                                         0
                                     </td>
 

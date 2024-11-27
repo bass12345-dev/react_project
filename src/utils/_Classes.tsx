@@ -1,0 +1,1 @@
+export const td_classes = `px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white `;

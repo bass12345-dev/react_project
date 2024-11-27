@@ -8,3 +8,6 @@ export const supabase = createClient('https://fruxdjhzpmmalokokaci.supabase.co',
 
 export const userDB = 'users';
 export const paytoDB = 'pay_to';
+export const debex = 'deb_exp';
+
+export const debex_type = ['debt','expenses']

@@ -21,12 +21,22 @@ export type PayToInputs = {
 export type DebtItem = {
       deb_exp_id: string;
       total_amount: number;
-      pay_to: string;
+      payto_id : string;
+      pay_to: any;
       reason: string;
       type: string;
       date: string;
-      time: string; // Add other fields based on your table
-      // Add other fields based on your table
+     
     };
+
+export type DebtInputs = {
+      reason:string,
+      pay_to:string,
+      total_amount:number,
+      type:string,
+      date: string,
+      time: string,
+  
+}
 //<!--------------End--------------!>
   

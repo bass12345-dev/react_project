@@ -75,9 +75,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-    
-
-
   {
     path: '*',
     element: <p>404 Error - Nothing here...</p>
