@@ -1,4 +1,6 @@
+import withReactContent from "sweetalert2-react-content";
 import { debex, paytoDB, supabase } from "../utils/supabase";
+import Swal from "sweetalert2";
 
 
 // <!------------- Pay To Service -----------------!>
@@ -33,3 +35,5 @@ export const getpayToItems = async() => {
       return debtData;
     }
   }
+
+

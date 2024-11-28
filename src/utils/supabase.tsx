@@ -10,4 +10,4 @@ export const userDB = 'users';
 export const paytoDB = 'pay_to';
 export const debex = 'deb_exp';
 
-export const debex_type = ['debt','expenses']
+export const debex_type = ['debt','expenses','to-purchase']

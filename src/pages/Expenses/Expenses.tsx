@@ -48,7 +48,7 @@ function Expenses() {
               ))
             }
         </div>
-        <a href="#" className="font-varela font-bold text-blue-400">
+        <a href="#" className="font-varela font-bold text-blue-400 my-2 texts-center">
           View Analytics
         </a>
       </div>

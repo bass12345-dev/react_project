@@ -39,4 +39,16 @@ export type DebtInputs = {
   
 }
 //<!--------------End--------------!>
+
+
+//<!------------Inputs--------------!>
+export type DebexInputs = {
+  reason:string,
+  pay_to:string,
+  total_amount:number,
+  type:string,
+  date: string,
+  time: string,
+
+}
   
