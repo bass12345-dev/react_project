@@ -7,7 +7,7 @@ import { debex, supabase } from "../../utils/supabase";
 import Swal from "sweetalert2";
 import Select from 'react-select';
 
-export const DebexModal = ({ openModal, ToggleModal, debexItems,debex_type,title }: { openModal: any, ToggleModal: any, debexItems: any, debex_type:any, title:string }) => {
+export const DebexModal = ({ openModal, ToggleModal, debexItems,purc_item }: { openModal: any, ToggleModal: any, debexItems: any, purc_item:any }) => {
 
     const [pay_to, setPayTo] = useState([]);
     const [loader, setLoader] = useState(false);
@@ -54,8 +54,9 @@ export const DebexModal = ({ openModal, ToggleModal, debexItems,debex_type,title
             total_amount: data.total_amount,
             payto_id : pay_to_who,
             reason: data.reason,
-            type: debex_type,
-            date: data.date,
+            type: purc_item.debex_type,
+            due_date: data.date,
+            paid_date : null
         }
 
         setLoader(true);
@@ -89,7 +90,7 @@ export const DebexModal = ({ openModal, ToggleModal, debexItems,debex_type,title
             <Modal.Body>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="space-y-6">
-                        <h3 className="text-xl font-medium text-gray-900 dark:text-white">Add {title}</h3>
+                        <h3 className="text-xl font-medium text-gray-900 dark:text-white">{purc_item.title}</h3>
 
                         <div>
                             <div className="mb-2 block">
@@ -115,7 +116,7 @@ export const DebexModal = ({ openModal, ToggleModal, debexItems,debex_type,title
 
                         <div>
                             <div className="mb-2 block">
-                                <Label htmlFor="date" value="date" />
+                                <Label htmlFor="date" value={purc_item.date_label} />
                             </div>
                             <TextInput id="date" type="date" {...register("date")} required />
                         </div>

@@ -8,7 +8,7 @@ import withReactContent from "sweetalert2-react-content";
 
 export const ExpensesTable = ({ expenses, getExpenses }: { expenses: any, getExpenses: any }) => {
 
-    let table_headers   =  [{ name: "Expenses"},{ name: "Payee"}, {name: "Amount"},{name: "Paid Date"},{ name: "Action"}]
+    let table_headers   =  [{ name: "Expenses"},{ name: "Payee"}, {name: "Amount"},{name: "Due Date"},{name: "Paid Date"},{ name: "Action"}]
     const [openModal, setOpenModal] = useState(false);
 
     const ToggleModal = () => {
@@ -87,6 +87,7 @@ export const ExpensesTable = ({ expenses, getExpenses }: { expenses: any, getExp
                                         <td scope="row" className={td_classes}>
                                             {row.total_amount.toLocaleString()}
                                         </td>
+                                        <td className={td_classes}>0</td>
                                         <td className={td_classes}>0</td>
                                         <td className="px-6 py-4">
                                             <a href="#"

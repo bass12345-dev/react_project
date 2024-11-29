@@ -1,23 +1,32 @@
 import { Button } from "flowbite-react"
 import { useEffect, useState } from "react";
 import { DebtItem } from "../../utils/Types";
-import { getDebexItems} from "../../service/Service";
+import { getCurrentDate, getDebexItems} from "../../service/Service";
 import { debex, debex_type, supabase } from "../../utils/supabase";
 import { td_classes } from "../../utils/_Classes";
 import { DebexModal } from "../../components/Modals/DebexModal";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
+import { PurchasedModal } from "../../components/Modals/PurchasedModal";
 
 
 export const ToPurchase = () => {
+    //Table headers
+    let table_headers   =  [{ name: ""},{ name: "Product/Services/Bills"}, {name: "Payee"},{name: "Amount"},{name: "Due Date"},{ name: "Action"}]
+    //State
+    const [openModal, setOpenModal] = useState(false); //Modals
+    const [openPurchasedModal, setOpenPurchasedModal] = useState(false); //Modals
+    const [openPurchasedItems, setPurchasedItems] = useState([]) //Modals
+    const [expenses, setExpenses] = useState<DebtItem[]>([]);//Debex Items
 
-    let table_headers   =  [{ name: ""},{ name: "Product/Services"}, {name: "Payee"},{name: "Amount"},{name: "Paid Date"},{ name: "Action"}]
-    const [openModal, setOpenModal] = useState(false);
-    const [expenses, setExpenses] = useState<DebtItem[]>([]);
-
+   
+    
+     // <!---------------- Get  Debex Items---------------->
     const debexItems = async () => {
-      if ((await getDebexItems(debex_type[2])).length > 0) {
-        setExpenses(await getDebexItems(debex_type[2]));
+        let params = {debex_type:debex_type[2],order_by:'due_date'};
+      if ((await getDebexItems(params)).length > 0) {
+       
+        setExpenses(await getDebexItems(params));
        
       } else {
         setExpenses([]);
@@ -28,12 +37,19 @@ export const ToPurchase = () => {
         debexItems()
      
     }, []);
+    // <!---------------- End---------------->
 
+    // <!---------------- Toggle Modal---------------->
     const ToggleModal = () => {
         setOpenModal(!openModal);
     }
+    function TogglePurchasedModal (row:any) {
+        setOpenPurchasedModal(!openPurchasedModal);
+        setPurchasedItems(row)
+    }
+     //   <!---------------------- END ----------------------!>
 
-
+    // <!---------------- Remove Data ---------------->
     function remove(row:any){
         withReactContent(Swal).fire({
             title: "Do you want to Remove?",
@@ -76,7 +92,14 @@ export const ToPurchase = () => {
            
         }
       }
+    //   <!---------------------- END ----------------------!>
 
+
+    // <------------------------Due Date Class---------------------!>
+    const _class_due = (date:any) => {
+        return date <= getCurrentDate() ? 'bg-red-800 text-white' :''
+    }
+     //   <!---------------------- END ----------------------!>
       
     return (
         <>
@@ -99,20 +122,20 @@ export const ToPurchase = () => {
                             {
                             expenses.length > 0 &&
                                 expenses.map((row: any) => (
-                                    <tr key={row.deb_exp_id}>
+                                    <tr key={row.deb_exp_id} >
                                         <td scope="row" className="px-6 py-4 ">
-                                        <button className="  inline-flex items-center text-white font-varela  bg-green-500 hover:bg-red-500 px-4 py-1  rounded-full">Purchase</button>
+                                        <button className="  inline-flex items-center text-white font-varela  bg-green-500 hover:bg-red-500 px-4 py-1  rounded-full" onClick={() => TogglePurchasedModal(row)}>Purchased</button>
                                         </td>
-                                        <td scope="row"  className={td_classes}>
+                                        <td scope="row"  className={`${td_classes}${_class_due(row.due_date)}`}>
                                            {row.reason}
                                         </td>
-                                        <td scope="row"  className={td_classes}>
+                                        <td scope="row"  className={`${td_classes}${_class_due(row.due_date)}`}>
                                             {row.pay_to.first_name} {row.pay_to.last_name}
                                         </td>
-                                        <td scope="row" className={td_classes}>
+                                        <td scope="row" className={`${td_classes}${_class_due(row.due_date)}`}>
                                             {row.total_amount.toLocaleString()}
                                         </td>
-                                        <td className={td_classes}>0</td>
+                                        <td className={`${td_classes}${_class_due(row.due_date)}`}>{row.due_date == null ? <span className="text-green-600">No due date</span> : row.due_date}</td>
                                         <td className="px-6 py-4">
                                             <a href="#"
                                                 className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-2">Edit</a>
@@ -127,7 +150,8 @@ export const ToPurchase = () => {
                     </table>
                 </div>
             </div>
-            <DebexModal openModal={openModal} debexItems={debexItems} title={'To Purchase'} debex_type={debex_type[2]} ToggleModal={ToggleModal}/>
+            <DebexModal openModal={openModal} ToggleModal={ToggleModal} debexItems={debexItems} purc_item={{title:'To Purchase/Bills',date_label:'Due Date',debex_type:debex_type[2]}}  />
+            <PurchasedModal openModal={openPurchasedModal} debexItems={debexItems} purc_item={openPurchasedItems}  ToggleModal={TogglePurchasedModal}  />
         </>
     )
 

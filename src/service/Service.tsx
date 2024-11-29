@@ -17,7 +17,7 @@ export const getpayToItems = async() => {
 
   // <!-------------Debt Service-----------------!>
 
-  export const getDebexItems = async(type:any) => {
+  export const getDebexItems = async(params:any) => {
     const { data: debtData, error } = await supabase.from(debex).select(
       `
       deb_exp_id,
@@ -25,10 +25,11 @@ export const getpayToItems = async() => {
       reason,
       type,
       payto_id,
-      date,
+      due_date,
+      paid_date,
       ${paytoDB}(first_name,last_name)
      `
-    ).eq('type', type).order('date', { ascending: false })
+    ).eq('type', params.debex_type).order(params.order_by, { ascending: false })
     if (error) {
       return [];
     } else {
@@ -37,3 +38,12 @@ export const getpayToItems = async() => {
   }
 
 
+export const getCurrentDate = () => {
+    // <!---------------- Get Current Date---------------->
+    const date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    return year+'-'+month+'-'+day;
+      // <!---------------- End---------------->
+}

@@ -25,7 +25,9 @@ export type DebtItem = {
       pay_to: any;
       reason: string;
       type: string;
-      date: string;
+      due_date: string;
+      paid_date: string;
+
      
     };
 
