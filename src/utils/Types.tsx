@@ -27,6 +27,7 @@ export type DebtItem = {
       type: string;
       due_date: string;
       paid_date: string;
+      date_acquired:string;
 
      
     };
@@ -54,3 +55,12 @@ export type DebexInputs = {
 
 }
   
+
+
+//<!------------Inputs--------------!>
+export type CardItem = {
+  title: string,
+  amount: number,
+  color: string,
+  icon: string
+}

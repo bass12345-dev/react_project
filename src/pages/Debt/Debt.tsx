@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import { paytoDB, supabase } from '../../utils/supabase'
+import { debex_type, paytoDB, supabase } from '../../utils/supabase'
 import { useEffect } from 'react'
 import { Cards } from '../../components/Cards';
 import { Logs } from './debt_components/Logs';
 import { DebtTable } from './debt_components/DebtTable';
-import { AddDebtModal } from './debt_components/modals/AddDebtModal';
 import { DebtItem, PaytoItem } from '../../utils/Types';
 import { getDebexItems, getpayToItems } from '../../service/Service';
 
@@ -14,8 +13,9 @@ function Debt() {
   //<!--------------- Get Debt ----------------!>
   const [debt, setDebt] = useState<DebtItem[]>([]);
   const getDebt = async () => {
-    if ((await getDebexItems('debt')).length > 0) {
-      setDebt(await getDebexItems('debt'));
+    let params = { debex_type: debex_type[0], order_by: 'date_acquired' };
+    if ((await getDebexItems(params)).length > 0) {
+      setDebt(await getDebexItems(params));
     } else {
       setDebt([]);
     }

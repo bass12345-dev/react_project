@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Button, Checkbox, Label, Modal, TextInput } from "flowbite-react";
-import { AddDebtModal } from './modals/AddDebtModal';
-import { debex, paytoDB, supabase } from '../../../utils/supabase';
+import { debex, debex_type, paytoDB, supabase } from '../../../utils/supabase';
 import { PaytoItem } from '../../../utils/Types';
 import { NumericFormat, numericFormatter } from 'react-number-format';
 import withReactContent from 'sweetalert2-react-content';
 import { td_classes } from '../../../utils/_Classes';
 import Swal from 'sweetalert2';
+import { DebexModal } from '../../../components/Modals/DebexModal';
+import { Link } from 'react-router-dom';
 export const DebtTable = ({ debt, getDebt }: { debt: any, getDebt: any }) => {
 
-    let table_headers   =  [{ name: "DEBT"},{ name: "Pay To"}, {name: "Total Amount"},{name: "Balance"},{ name: "Action"}]
+    let table_headers = [{ name: "DEBT" }, { name: "Payee" }, { name: "Date Acquired" }, { name: "Total Amount" }, { name: "Balance" }, { name: "Action" }]
     const [openModal, setOpenModal] = useState(false);
+   
 
     const ToggleModal = () => {
         setOpenModal(!openModal);
@@ -19,33 +21,33 @@ export const DebtTable = ({ debt, getDebt }: { debt: any, getDebt: any }) => {
     // <!----------------Remove---------------!>
     const remove = (row: any) => {
         withReactContent(Swal).fire({
-                title: "Do you want to Remove?",
-                text: row.reason,
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",  
-                confirmButtonText: "Yes, remove it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    remove_data(row.deb_exp_id)
-                }
-            })
+            title: "Do you want to Remove?",
+            text: row.reason,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, remove it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                remove_data(row.deb_exp_id)
+            }
+        })
     }
-    
-    async function remove_data(id:string){
 
-        const {error,data} = await supabase
-        .from(debex)
-        .delete()
-        .eq('deb_exp_id', id )
-        if(error){
+    async function remove_data(id: string) {
+
+        const { error, data } = await supabase
+            .from(debex)
+            .delete()
+            .eq('deb_exp_id', id)
+        if (error) {
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
                 text: "Something went wrong! Contact Developer if Issue persist!",
             })
-        }else{
+        } else {
             Swal.fire(
                 "Removed!",
                 "Data has been removed.",
@@ -56,7 +58,7 @@ export const DebtTable = ({ debt, getDebt }: { debt: any, getDebt: any }) => {
 
     }
 
-    
+
 
     return (
         <>
@@ -65,11 +67,11 @@ export const DebtTable = ({ debt, getDebt }: { debt: any, getDebt: any }) => {
                     <Button className="bg-debexPrimary font-varela hover:bg-red-500  text-white hover:bg-red-500 rounded-full" onClick={ToggleModal} >Add New</Button>
                 </div>
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 relative">
                         <thead className="text-xs text-white uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 {
-                                    table_headers.map((row,index) =>(
+                                    table_headers.map((row, index) => (
                                         <th scope="col" key={index} className="px-6 py-3">{row.name}</th>
                                     ))
                                 }
@@ -77,14 +79,18 @@ export const DebtTable = ({ debt, getDebt }: { debt: any, getDebt: any }) => {
                         </thead>
                         <tbody>
                             {
-                            debt.length > 0 &&
+                                debt.length > 0 &&
                                 debt.map((row: any) => (
                                     <tr key={row.deb_exp_id}>
                                         <td scope="row" className="px-6 py-4 ">
-                                            <a href="./debt/index.html" className="font-mediumb text-blue-400 underline">{row.reason}</a>
+                                            <Link to={`/debt/${row.deb_exp_id}`} className="font-mediumb text-blue-700 underline">{row.reason}</Link>
+                                            {/* <a href="./debt/index.html" ></a> */}
                                         </td>
-                                        <td scope="row"  className={td_classes}>
-                                            {row.pay_to.first_name} {row.pay_to.last_name}
+                                        <td scope="row" className={td_classes}>
+                                    {row.pay_to.first_name} {row.pay_to.last_name}
+                                        </td>
+                                        <td scope="row" className={td_classes}>
+                                            {row.date_acquired}
                                         </td>
                                         <td scope="row" className={td_classes}>
                                             {row.total_amount.toLocaleString()}
@@ -94,7 +100,7 @@ export const DebtTable = ({ debt, getDebt }: { debt: any, getDebt: any }) => {
                                             <a href="#"
                                                 className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-2">Edit</a>
                                             <a href="#"
-                                                className="font-medium text-red-600 dark:text-red-500 hover:underline" onClick={()=>remove(row)}>Remove</a>
+                                                className="font-medium text-red-600 dark:text-red-500 hover:underline" onClick={() => remove(row)}>Remove</a>
                                         </td>
                                     </tr>
                                 ))
@@ -106,7 +112,7 @@ export const DebtTable = ({ debt, getDebt }: { debt: any, getDebt: any }) => {
 
             </div>
 
-            <AddDebtModal openModal={openModal} getDebt={getDebt} ToggleModal={ToggleModal} />
+            <DebexModal openModal={openModal} ToggleModal={ToggleModal} debexItems={getDebt} purc_item={{ title: 'Debt', date_label: 'Acquired Date', debex_type: debex_type[0] }} />
 
         </>
 

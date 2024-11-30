@@ -13,8 +13,7 @@ export const PurchasedModal = ({ openModal, ToggleModal, debexItems, purc_item }
 
     const [loader, setLoader] = useState(false);
     const [purchased_items, setPurchasedItems] = useState([]) //Modals
-    const [amount, setAmount] = useState<number>(0);
-
+   
     //<!------------------ Insert Data ---------------------!>
     const {
         handleSubmit,
@@ -46,25 +45,18 @@ export const PurchasedModal = ({ openModal, ToggleModal, debexItems, purc_item }
                 {
                     icon: "success",
                     title: "Success...",
-                    text: "Added To Expenses Successfully",
+                    text: `Added To Expenses Successfully` ,
                 }
             )
             setLoader(false);
             reset();
             debexItems();
-            setAmount(0);
+           
         } else {
             setLoader(false);
         }
     }
     
-
-
-    function calculateSave(e: any) {
-        const val = purc_item.total_amount - e.target.value;
-        setAmount(val);
-
-    }
 
     
 
@@ -79,19 +71,15 @@ export const PurchasedModal = ({ openModal, ToggleModal, debexItems, purc_item }
                             purc_item.due_date == null ? <h4 className="text-sm font-medium text-green-700 dark:text-white">No Due Date</h4> : <h4 className="text-sm font-medium text-red-500 dark:text-white">Due Date :  {purc_item.due_date}</h4>
                         }
                         <h1 className="text-xl font-medium text-center  text-gray-900 dark:text-white">{purc_item.total_amount}</h1>
-                        {
-                            amount > 0 ? <h1 className="text-xl font-medium text-center  text-green-500 dark:text-white">You saved {amount}</h1> : ''
-                        }
-
+                     
                     </div>
                     <div className="space-y-6 mt-3">
                         <div>
                             <div className="mb-2 block">
-                                <Label htmlFor="amount" value="Amount" />
+                                <Label htmlFor="amount" value="Actual Amount" />
                             </div>
 
                             <TextInput id="amount" type="number" {...register("total_amount")}
-                                onChange={(evt) => { calculateSave(evt) }}
                                 required />
                         </div>
 

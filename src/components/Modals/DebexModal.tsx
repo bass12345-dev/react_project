@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { DebexInputs, DebtInputs, PaytoItem } from "../../utils/Types";
 import { useEffect, useState } from "react";
 import { getpayToItems } from "../../service/Service";
-import { debex, supabase } from "../../utils/supabase";
+import { debex, debex_type, supabase } from "../../utils/supabase";
 import Swal from "sweetalert2";
 import Select from 'react-select';
 
@@ -33,7 +33,27 @@ export const DebexModal = ({ openModal, ToggleModal, debexItems,purc_item }: { o
         
       }, []);
 
-  
+      
+
+    function getDate(_date:any){
+        let date = null;
+        switch (purc_item.debex_type) {
+            case debex_type[0] :
+                date = _date;
+                break;
+            case debex_type[1] :
+                date = _date;
+                break;
+            case debex_type[2] :
+                date = _date;
+                break;
+            default:
+                date = null
+                break;
+        }
+
+        return date;
+    }
 
     //<!------------------ Insert Data ---------------------!>
     const {
@@ -50,13 +70,16 @@ export const DebexModal = ({ openModal, ToggleModal, debexItems,purc_item }: { o
             return;
         }
 
+        const date = getDate(data.date);
+        console.log(date)
         let items = {
-            total_amount: data.total_amount,
-            payto_id : pay_to_who,
-            reason: data.reason,
-            type: purc_item.debex_type,
-            due_date: data.date,
-            paid_date : null
+            total_amount    : data.total_amount,
+            payto_id        : pay_to_who,
+            reason          : data.reason,
+            type            : purc_item.debex_type,
+            due_date        : date, 
+            paid_date       : date, 
+            date_acquired   : date, 
         }
 
         setLoader(true);
@@ -118,7 +141,7 @@ export const DebexModal = ({ openModal, ToggleModal, debexItems,purc_item }: { o
                             <div className="mb-2 block">
                                 <Label htmlFor="date" value={purc_item.date_label} />
                             </div>
-                            <TextInput id="date" type="date" {...register("date")} required />
+                            <TextInput id="date" type="date"   {...register("date")}  required={purc_item.debex_type != debex_type[2] ? true:false}  />
                         </div>
 
 

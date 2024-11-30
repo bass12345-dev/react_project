@@ -1,41 +1,42 @@
 import { Button } from "flowbite-react"
 import { useEffect, useState } from "react";
-import { DebtItem } from "../../utils/Types";
-import { getCurrentDate, getDebexItems} from "../../service/Service";
+import { CardItem, DebtItem } from "../../utils/Types";
+import { getCurrentDate, getDebexItems } from "../../service/Service";
 import { debex, debex_type, supabase } from "../../utils/supabase";
 import { td_classes } from "../../utils/_Classes";
 import { DebexModal } from "../../components/Modals/DebexModal";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import { PurchasedModal } from "../../components/Modals/PurchasedModal";
+import { Cards } from "../../components/Cards";
 
 
 export const ToPurchase = () => {
     //Table headers
-    let table_headers   =  [{ name: ""},{ name: "Product/Services/Bills"}, {name: "Payee"},{name: "Amount"},{name: "Due Date"},{ name: "Action"}]
+    let table_headers = [{ name: "" }, { name: "Product/Services/Bills" }, { name: "Payee" }, { name: "Amount" }, { name: "Due Date" }, { name: "Action" }]
     //State
     const [openModal, setOpenModal] = useState(false); //Modals
     const [openPurchasedModal, setOpenPurchasedModal] = useState(false); //Modals
     const [openPurchasedItems, setPurchasedItems] = useState([]) //Modals
     const [expenses, setExpenses] = useState<DebtItem[]>([]);//Debex Items
-
-   
+    const [card_items, SetCardItems] = useState<CardItem[]>([]);
     
-     // <!---------------- Get  Debex Items---------------->
+
+
+    // <!---------------- Get  Debex Items---------------->
     const debexItems = async () => {
-        let params = {debex_type:debex_type[2],order_by:'due_date'};
-      if ((await getDebexItems(params)).length > 0) {
-       
-        setExpenses(await getDebexItems(params));
-       
-      } else {
-        setExpenses([]);
-      }
+        let params = { debex_type: debex_type[2], order_by: 'due_date' };
+        if ((await getDebexItems(params)).length > 0) {
+
+            setExpenses(await getDebexItems(params));
+            
+        } else {
+            setExpenses([]);
+        }
     }
-  
+
     useEffect(() => {
         debexItems()
-     
     }, []);
     // <!---------------- End---------------->
 
@@ -43,17 +44,17 @@ export const ToPurchase = () => {
     const ToggleModal = () => {
         setOpenModal(!openModal);
     }
-    function TogglePurchasedModal (row:any) {
+    function TogglePurchasedModal(row: any) {
         setOpenPurchasedModal(!openPurchasedModal);
         setPurchasedItems(row)
     }
-     //   <!---------------------- END ----------------------!>
+    //   <!---------------------- END ----------------------!>
 
     // <!---------------- Remove Data ---------------->
-    function remove(row:any){
+    function remove(row: any) {
         withReactContent(Swal).fire({
             title: "Do you want to Remove?",
-            text: row.reason+' Pay to '+row.pay_to.first_name,
+            text: row.reason + ' Pay to ' + row.pay_to.first_name,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -68,42 +69,58 @@ export const ToPurchase = () => {
     }
 
 
-    async function remove_debex_data(id:string){
+    async function remove_debex_data(id: string) {
 
-        const {error,data} = await supabase
-        .from(debex)
-        .delete()
-        .eq('deb_exp_id', id )
-        if(error){
-      
+        const { error, data } = await supabase
+            .from(debex)
+            .delete()
+            .eq('deb_exp_id', id)
+        if (error) {
+
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
                 text: "Something went wrong! Contact Developer if Issue persist!",
             })
-        }else{
-         
+        } else {
+
             Swal.fire(
                 "Removed!",
                 "Data has been removed.",
                 "success"
             )
             debexItems()
-           
+
         }
-      }
+    }
     //   <!---------------------- END ----------------------!>
 
 
     // <------------------------Due Date Class---------------------!>
-    const _class_due = (date:any) => {
-        return date <= getCurrentDate() ? 'bg-red-800 text-white' :''
+    const _class_due = (date: any) => {
+        return date <= getCurrentDate() ? 'bg-red-800 text-white' : ''
     }
-     //   <!---------------------- END ----------------------!>
-      
+    //   <!---------------------- END ----------------------!>
+
+    
+  
+
     return (
         <>
-            <div className="card bg-debexLightBlue border rounded-lg h-auto   w-full px-6 py-6">
+            <div className="flex justify-between sm:flex-row flex-wrap mt-10">
+                <div className="flex  sm:flex-row gap-3 flex-wrap ">
+                    {
+                        card_items.map((row: any, index) => (
+                            <Cards key={index} row_card_item={row} />
+                        ))
+                    }
+
+                </div>
+                <a href="#" className="font-varela font-bold text-blue-400">
+                    View Analytics
+                </a>
+            </div>
+            <div className="card bg-debexLightBlue border rounded-lg h-auto   w-full px-6 py-6 mt-10">
                 <div className="card-buttons flex justify-end">
                     <Button className="bg-debexPrimary font-varela hover:bg-red-500  text-white hover:bg-red-500 rounded-full" onClick={ToggleModal}>Add New</Button>
                 </div>
@@ -120,16 +137,16 @@ export const ToPurchase = () => {
                         </thead>
                         <tbody>
                             {
-                            expenses.length > 0 &&
+                                expenses.length > 0 &&
                                 expenses.map((row: any) => (
                                     <tr key={row.deb_exp_id} >
                                         <td scope="row" className="px-6 py-4 ">
-                                        <button className="  inline-flex items-center text-white font-varela  bg-green-500 hover:bg-red-500 px-4 py-1  rounded-full" onClick={() => TogglePurchasedModal(row)}>Purchased</button>
+                                            <button className="  inline-flex items-center text-white font-varela  bg-green-500 hover:bg-red-500 px-4 py-1  rounded-full" onClick={() => TogglePurchasedModal(row)}>Purchased</button>
                                         </td>
-                                        <td scope="row"  className={`${td_classes}${_class_due(row.due_date)}`}>
-                                           {row.reason}
+                                        <td scope="row" className={`${td_classes}${_class_due(row.due_date)}`}>
+                                            {row.reason}
                                         </td>
-                                        <td scope="row"  className={`${td_classes}${_class_due(row.due_date)}`}>
+                                        <td scope="row" className={`${td_classes}${_class_due(row.due_date)}`}>
                                             {row.pay_to.first_name} {row.pay_to.last_name}
                                         </td>
                                         <td scope="row" className={`${td_classes}${_class_due(row.due_date)}`}>
@@ -140,7 +157,7 @@ export const ToPurchase = () => {
                                             <a href="#"
                                                 className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-2">Edit</a>
                                             <a href="#"
-                                                className="font-medium text-red-600 dark:text-red-500 hover:underline" onClick={()=>remove(row)}>Remove</a>
+                                                className="font-medium text-red-600 dark:text-red-500 hover:underline" onClick={() => remove(row)}>Remove</a>
                                         </td>
                                     </tr>
                                 ))
@@ -150,8 +167,8 @@ export const ToPurchase = () => {
                     </table>
                 </div>
             </div>
-            <DebexModal openModal={openModal} ToggleModal={ToggleModal} debexItems={debexItems} purc_item={{title:'To Purchase/Bills',date_label:'Due Date',debex_type:debex_type[2]}}  />
-            <PurchasedModal openModal={openPurchasedModal} debexItems={debexItems} purc_item={openPurchasedItems}  ToggleModal={TogglePurchasedModal}  />
+            <DebexModal openModal={openModal} ToggleModal={ToggleModal} debexItems={debexItems} purc_item={{ title: 'To Purchase/Bills', date_label: 'Due Date', debex_type: debex_type[2] }} />
+            <PurchasedModal openModal={openPurchasedModal} debexItems={debexItems} purc_item={openPurchasedItems} ToggleModal={TogglePurchasedModal} />
         </>
     )
 

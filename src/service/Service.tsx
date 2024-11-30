@@ -27,9 +27,31 @@ export const getpayToItems = async() => {
       payto_id,
       due_date,
       paid_date,
+      date_acquired,
       ${paytoDB}(first_name,last_name)
      `
     ).eq('type', params.debex_type).order(params.order_by, { ascending: false })
+    if (error) {
+      return [];
+    } else {
+      return debtData;
+    }
+  }
+
+  export const getDebexItem = async(params:any) => {
+    const { data: debtData, error } = await supabase.from(debex).select(
+      `
+      deb_exp_id,
+      total_amount,
+      reason,
+      type,
+      payto_id,
+      due_date,
+      paid_date,
+      date_acquired,
+      ${paytoDB}(first_name,last_name)
+     `
+    ).eq('deb_exp_id', params.debex_id)
     if (error) {
       return [];
     } else {

@@ -1,10 +1,10 @@
 import { Button } from "flowbite-react"
 import { useState } from "react";
-import { AddExpModal } from "./modals/AddExpModal";
 import { td_classes } from "../../../utils/_Classes";
-import { debex, supabase } from "../../../utils/supabase";
+import { debex, debex_type, supabase } from "../../../utils/supabase";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { DebexModal } from "../../../components/Modals/DebexModal";
 
 export const ExpensesTable = ({ expenses, getExpenses }: { expenses: any, getExpenses: any }) => {
 
@@ -87,8 +87,8 @@ export const ExpensesTable = ({ expenses, getExpenses }: { expenses: any, getExp
                                         <td scope="row" className={td_classes}>
                                             {row.total_amount.toLocaleString()}
                                         </td>
-                                        <td className={td_classes}>0</td>
-                                        <td className={td_classes}>0</td>
+                                        <td className={td_classes}>{row.due_date}</td>
+                                        <td className={td_classes}>{row.paid_date}</td>
                                         <td className="px-6 py-4">
                                             <a href="#"
                                                 className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-2">Edit</a>
@@ -103,7 +103,7 @@ export const ExpensesTable = ({ expenses, getExpenses }: { expenses: any, getExp
                     </table>
                 </div>
             </div>
-            <AddExpModal openModal={openModal} getExpenses={getExpenses} ToggleModal={ToggleModal} />
+            <DebexModal openModal={openModal} ToggleModal={ToggleModal} debexItems={getExpenses} purc_item={{ title: 'Expenses', date_label: 'Paid Date', debex_type: debex_type[1] }} />
         </>
 
 

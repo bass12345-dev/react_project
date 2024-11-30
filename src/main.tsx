@@ -19,6 +19,7 @@ import Not_LoggedIn from "./auth/Protected/Not_LoggedIn";
 import { AccesToken, UserData } from "./utils/LocaStorage";
 import Payto from "./pages/PayTo/PayTo";
 import { ToPurchase } from "./pages/ToPurchase/ToPurchase";
+import DebtInfo from "./pages/DebtInfo/DebtInfo";
 const clientId = '621336373431-t4bk00pheghbibij0nab5ovpfuql7i6q.apps.googleusercontent.com';
 
 
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
           {
             path: "debt",
             element: <Debt />,
+          },
+          {
+            path: "debt/:id",
+            element: <DebtInfo/>,
           },
           {
             path: "expenses",

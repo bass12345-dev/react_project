@@ -3,6 +3,7 @@ import { Cards } from "../../components/Cards"
 import { ExpensesTable } from "./expenses_components/ExpensesTable"
 import { DebtItem } from "../../utils/Types";
 import { getDebexItems } from "../../service/Service";
+import { debex_type } from "../../utils/supabase";
 
 function Expenses() {
 
@@ -10,9 +11,9 @@ function Expenses() {
    //<!--------------- Get Expenses----------------!>
    const [expenses, setExpenses] = useState<DebtItem[]>([]);
    const getExpenses = async () => {
-     if ((await getDebexItems('expenses')).length > 0) {
-       setExpenses(await getDebexItems('expenses'));
-      
+    let params = { debex_type: debex_type[1], order_by: 'paid_date' };
+    if ((await getDebexItems(params)).length > 0) {
+      setExpenses(await getDebexItems(params));
      } else {
        setExpenses([]);
      }
