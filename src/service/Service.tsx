@@ -1,25 +1,93 @@
 import withReactContent from "sweetalert2-react-content";
-import { debex, paytoDB, supabase } from "../utils/supabase";
+import { debex, debex_type, paytoDB, supabase } from "../utils/supabase";
 import Swal from "sweetalert2";
+import { useState } from "react";
 
 
 // <!------------- Pay To Service -----------------!>
-export const getpayToItems = async() => {
-    const { data: payToData, error } = await supabase.from(paytoDB).select().order('created_at', { ascending: false })
+export const getpayToItems = async () => {
+  const { data: payToData, error } = await supabase.from(paytoDB).select().order('created_at', { ascending: false })
 
-    if (error) {
-      return [];
-    } else {
-      return payToData;
-    }
+  if (error) {
+    return [];
+  } else {
+    return payToData;
+  }
+}
+
+
+// <!-------------Debt Service-----------------!>
+
+export const DebexDBCreate = () => {
+
+  const Create = async (items: any) => {
+    const {data:result, error } = await supabase
+      .from(debex)
+      .insert([items]);
+    return {result,error};
   }
 
+  return { Create };
+}
 
-  // <!-------------Debt Service-----------------!>
 
-  export const getDebexItems = async(params:any) => {
-    const { data: debtData, error } = await supabase.from(debex).select(
-      `
+export const DebexDBDelete = () => {
+
+  const Delete = async (id: any) => {
+    const {data:result, error } = await supabase
+      .from(debex)
+      .delete()
+      .eq('deb_exp_id', id) 
+    return {result,error};
+  }
+  
+  return { Delete };
+}
+
+export const  DebexDBDeleteAlert = (result:any,getDebt:any) => {
+  if(!result.error){
+    Swal.fire({
+      icon: "success",
+      title: "Success",
+      text: "Data has been deleted successfully!",
+    });
+    getDebt();
+  }else{
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong! Contact Developer if Issue persist!",
+    });
+  }
+}
+
+export const getDateSelectedType = async (debexSelectedType: any,_date:any) => {
+
+      let date = null;
+        switch (debexSelectedType) {
+            case debex_type[0] :
+                date = _date;
+                break;
+            case debex_type[1] :
+                date = _date;
+                break;
+            case debex_type[2] :
+                date = _date;
+                break;
+            default:
+                date = null
+                break;
+        }
+
+      return date;
+
+}
+
+
+
+export const getDebexItems = async (params: any) => {
+  const { data: debtData, error } = await supabase.from(debex).select(
+    `
       deb_exp_id,
       total_amount,
       reason,
@@ -30,17 +98,17 @@ export const getpayToItems = async() => {
       date_acquired,
       ${paytoDB}(first_name,last_name)
      `
-    ).eq('type', params.debex_type).order(params.order_by, { ascending: false })
-    if (error) {
-      return [];
-    } else {
-      return debtData;
-    }
+  ).eq('type', params.debex_type).order(params.order_by, { ascending: false })
+  if (error) {
+    return [];
+  } else {
+    return debtData;
   }
+}
 
-  export const getDebexItem = async(params:any) => {
-    const { data: debtData, error } = await supabase.from(debex).select(
-      `
+export const getDebexItem = async (params: any) => {
+  const { data: debtData, error } = await supabase.from(debex).select(
+    `
       deb_exp_id,
       total_amount,
       reason,
@@ -51,21 +119,21 @@ export const getpayToItems = async() => {
       date_acquired,
       ${paytoDB}(first_name,last_name)
      `
-    ).eq('deb_exp_id', params.debex_id)
-    if (error) {
-      return [];
-    } else {
-      return debtData;
-    }
+  ).eq('deb_exp_id', params.debex_id)
+  if (error) {
+    return [];
+  } else {
+    return debtData;
   }
+}
 
 
 export const getCurrentDate = () => {
-    // <!---------------- Get Current Date---------------->
-    const date = new Date();
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    return year+'-'+month+'-'+day;
-      // <!---------------- End---------------->
+  // <!---------------- Get Current Date---------------->
+  const date = new Date();
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+  return year + '-' + month + '-' + day;
+  // <!---------------- End---------------->
 }

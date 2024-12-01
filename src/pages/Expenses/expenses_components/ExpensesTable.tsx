@@ -5,16 +5,14 @@ import { debex, debex_type, supabase } from "../../../utils/supabase";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { DebexModal } from "../../../components/Modals/DebexModal";
+import { DebexDBDelete } from "../../../service/Service";
 
 export const ExpensesTable = ({ expenses, getExpenses }: { expenses: any, getExpenses: any }) => {
 
     let table_headers   =  [{ name: "Expenses"},{ name: "Payee"}, {name: "Amount"},{name: "Due Date"},{name: "Paid Date"},{ name: "Action"}]
-    const [openModal, setOpenModal] = useState(false);
+    const { Delete } = DebexDBDelete();
 
-    const ToggleModal = () => {
-        setOpenModal(!openModal);
-    }
-
+    
     async function remove(row:any){
 
         withReactContent(Swal).fire({
@@ -58,10 +56,7 @@ export const ExpensesTable = ({ expenses, getExpenses }: { expenses: any, getExp
 
     return (
         <>
-              <div className="card bg-debexLightBlue border rounded-lg h-auto   w-full px-6 py-6">
-                <div className="card-buttons flex justify-end">
-                    <Button className="bg-debexPrimary font-varela hover:bg-red-500  text-white hover:bg-red-500 rounded-full" onClick={ToggleModal}>Add New</Button>
-                </div>
+            
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead className="text-xs text-white uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
@@ -102,8 +97,7 @@ export const ExpensesTable = ({ expenses, getExpenses }: { expenses: any, getExp
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <DebexModal openModal={openModal} ToggleModal={ToggleModal} debexItems={getExpenses} purc_item={{ title: 'Expenses', date_label: 'Paid Date', debex_type: debex_type[1] }} />
+           
         </>
 
 

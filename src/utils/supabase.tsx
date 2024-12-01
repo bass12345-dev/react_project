@@ -11,3 +11,4 @@ export const paytoDB = 'pay_to';
 export const debex = 'deb_exp';
 
 export const debex_type = ['debt','expenses','to-purchase']
+export const crud_type = ['create'];
