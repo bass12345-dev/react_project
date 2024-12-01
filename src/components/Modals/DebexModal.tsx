@@ -12,7 +12,7 @@ export const DebexModal = ({ openModal, ToggleModal, debexData,debexItem }: { op
     const [payees, setPayees] = useState([]);
     const [loader, setLoader] = useState(false);
     const payee = useRef(null);
-    const { Create } = DebexDBCreate();
+    const { Create } = DebexDBCreate(debex);
     
     //<!------------------ Fetch Data Payees ---------------------!>
 

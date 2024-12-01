@@ -18,16 +18,35 @@ export const getpayToItems = async () => {
 
 // <!-------------Debt Service-----------------!>
 
-export const DebexDBCreate = () => {
+export const DebexDBCreate = (table:any) => {
 
   const Create = async (items: any) => {
     const {data:result, error } = await supabase
-      .from(debex)
+      .from(table)
       .insert([items]);
     return {result,error};
   }
 
   return { Create };
+}
+
+export const DebexDBUpdate = (table:any) => {
+
+  const Update = async (items: any,id:any) => {
+    const {data:result, error } = await supabase
+      .from(table)
+      .update([items])
+      .eq('deb_exp_id', id);
+    return {result,error};
+
+
+
+    
+  
+  
+  }
+
+  return { Update };
 }
 
 
@@ -45,6 +64,8 @@ export const DebexDBDelete = () => {
 }
 
 export const  DebexDBDeleteAlert = (result:any,getDebt:any) => {
+  
+  
   if(!result.error){
     Swal.fire({
       icon: "success",
@@ -60,6 +81,20 @@ export const  DebexDBDeleteAlert = (result:any,getDebt:any) => {
     });
   }
 }
+
+export const DebexSwalLoader = () => {
+  Swal.fire({
+    title: "Removing Data",
+    html: "",
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+   
+  })
+}
+
 
 export const getDateSelectedType = async (debexSelectedType: any,_date:any) => {
 

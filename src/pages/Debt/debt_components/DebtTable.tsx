@@ -4,10 +4,22 @@ import withReactContent from 'sweetalert2-react-content';
 import { td_classes } from '../../../utils/_Classes';
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
-import { DebexDBDelete, DebexDBDeleteAlert } from '../../../service/Service';
-export const DebtTable = ({ debt, getDebt }: { debt: any, getDebt: any }) => {
+import { DebexDBDelete, DebexDBDeleteAlert, DebexSwalLoader } from '../../../service/Service';
+export const DebtTable = ({ 
+    debt, 
+    getDebt }: { 
+    debt: any, 
+    getDebt: any }) => {
 
-    let table_headers = [{ name: "DEBT" }, { name: "Payee" }, { name: "Date Acquired" }, { name: "Total Amount" }, { name: "Balance" }, { name: "Action" }]
+    let table_headers = [
+        { name: "DEBT" }, 
+        { name: "Payee" }, 
+        { name: "Date Acquired" }, 
+        { name: "Total Amount" }, 
+        { name: "Balance" }, 
+        { name: "Action" }
+    ]
+    
     const { Delete } = DebexDBDelete();
 
     // <!----------------Remove---------------!>
@@ -28,7 +40,7 @@ export const DebtTable = ({ debt, getDebt }: { debt: any, getDebt: any }) => {
     }
 
     async function remove_data(id: string) {
-
+        DebexSwalLoader();
         let result = await Delete(id);
         DebexDBDeleteAlert(result,getDebt);
     }

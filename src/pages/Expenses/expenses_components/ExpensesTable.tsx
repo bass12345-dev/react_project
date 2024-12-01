@@ -5,11 +5,23 @@ import { debex, debex_type, supabase } from "../../../utils/supabase";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { DebexModal } from "../../../components/Modals/DebexModal";
-import { DebexDBDelete } from "../../../service/Service";
+import { DebexDBDelete, DebexDBDeleteAlert, DebexSwalLoader } from "../../../service/Service";
 
-export const ExpensesTable = ({ expenses, getExpenses }: { expenses: any, getExpenses: any }) => {
+export const ExpensesTable = ({ 
+    expenses, 
+    getExpenses }
+    :{ 
+    expenses: any, 
+    getExpenses: any }) => {
 
-    let table_headers   =  [{ name: "Expenses"},{ name: "Payee"}, {name: "Amount"},{name: "Due Date"},{name: "Paid Date"},{ name: "Action"}]
+    let table_headers   =  [
+        { name: "Expenses"},
+        { name: "Payee"}, 
+        {name: "Amount"},
+        {name: "Due Date"},
+        {name: "Paid Date"},
+        { name: "Action"}]
+        
     const { Delete } = DebexDBDelete();
 
     
@@ -32,26 +44,10 @@ export const ExpensesTable = ({ expenses, getExpenses }: { expenses: any, getExp
     }
 
 
-    async function remove_data(id:string){
-
-        const {error,data} = await supabase
-        .from(debex)
-        .delete()
-        .eq('deb_exp_id', id )
-        if(error){
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Something went wrong! Contact Developer if Issue persist!",
-            })
-        }else{
-            Swal.fire(
-                "Removed!",
-                "Data has been removed.",
-                "success"
-            )
-            getExpenses();
-        }
+    async function remove_data(id: string) {
+        DebexSwalLoader();
+        let result = await Delete(id);
+        DebexDBDeleteAlert(result,getExpenses);
     }
 
     return (

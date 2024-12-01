@@ -11,7 +11,7 @@ export const menu = [
     },
     {
       path: "/to_purchase", 
-      name: "To Purchase",
+      name: "To Purchase/Bills",
       classname : 'font-varela font-bold hover:text-red-700 text-lg' 
     },
     {
