@@ -67,13 +67,13 @@ export const DebexModal = ({ openModal, ToggleModal, debexData,debexItem }: { op
 
         if(!result.error){
             Swal.fire({icon: "success",title: "Success...",text: "Data Added Successfully"});
-            setLoader(false);
+            
             reset();
             debexData();
         }else{
             Swal.fire({icon: "error", title: "Failed...", text: "Failed to Add Data"});
         }
-       
+        setLoader(false);
     }
 
     

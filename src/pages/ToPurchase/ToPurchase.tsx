@@ -26,11 +26,14 @@ export const ToPurchase = () => {
     // <!---------------- Get  Debex Items---------------->
     const getToPurchase = async () => {
         let params = { debex_type: debex_type[2], order_by: 'due_date' };
-        if ((await getDebexItems(params)).length > 0) {
+        let debexItems = getDebexItems(params);
+
+        if ((await debexItems).length > 0) {
             setToPurchased(await getDebexItems(params));
         } else {
             setToPurchased([]);
         }
+        
     }
 
     useEffect(() => {
