@@ -7,10 +7,13 @@ import { Loader } from "../../../components/Alerts";
 import { Spinner } from "flowbite-react";
 import SweetAlert2 from 'react-sweetalert2';
 import { PayToInputs, PaytoItem } from "../../../utils/Types";
+import { DebexDBCreate } from "../../../service/Service";
+import Swal from "sweetalert2";
 export const AddForm = ({getpayTo}:{getpayTo:any}) => {
     
     const [loader, setLoader] = useState(false);
     const [swalProps, setSwalProps] = useState({});
+    const { Create } = DebexDBCreate(paytoDB);
     
 
     const {
@@ -23,21 +26,15 @@ export const AddForm = ({getpayTo}:{getpayTo:any}) => {
     //<!------------------ Insert Data ---------------------!>
     async function InsertData(data:any){
         setLoader(true);
-        const { error } = await supabase
-        .from(paytoDB)
-        .insert([data]);
-        if(!error){
-            setSwalProps({
-                show: true,
-                title: 'Success',
-                text: 'Added Successfully',
-            });
-            setLoader(false);
+        let result = await Create(data);
+        if(!result.error){
+            Swal.fire({icon: "success",title: "Success...",text: "Data Added Successfully"});
             reset();
             getpayTo();
         }else{
-            setLoader(false);
+            Swal.fire({icon: "error", title: "Failed...", text: "Failed to Add Data"});
         }
+        setLoader(false);
     }
 
 

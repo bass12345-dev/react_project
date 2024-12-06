@@ -52,19 +52,17 @@ export const DebexModal = ({ openModal, ToggleModal, debexData,debexItem }: { op
             return;
         }
         setLoader(true);
-        const date = await getDateSelectedType(debexItem.debex_type,data.date);
+        const {due_date,paid_date,acquired_date} = await getDateSelectedType(debexItem.debex_type,data.date);
         let items = {
             total_amount    : parseFloat(data.total_amount),
             payto_id        : payee.current,
             reason          : data.reason,
             type            : debexItem.debex_type,
-            due_date        : date, 
-            paid_date       : date, 
-            date_acquired   : date, 
+            due_date        : due_date  || null, 
+            paid_date       : paid_date ||  null, 
+            date_acquired   : acquired_date || null, 
         }
-
         let result = await Create(items);
-
         if(!result.error){
             Swal.fire({icon: "success",title: "Success...",text: "Data Added Successfully"});
             

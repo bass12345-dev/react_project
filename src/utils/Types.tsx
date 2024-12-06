@@ -14,6 +14,12 @@ export type PayToInputs = {
     address: string,
   }
 
+export type PayeeInfo = {
+  payee: string;
+  totalAmount: number;
+  reason:string
+};
+
 //<!--------------End--------------!>
 
 
@@ -57,7 +63,7 @@ export type DebexInputs = {
   
 
 
-//<!------------Inputs--------------!>
+//<!------------Card Item Display--------------!>
 export type CardItem = {
   title: string,
   amount: number,

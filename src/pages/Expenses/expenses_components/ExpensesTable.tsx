@@ -18,7 +18,6 @@ export const ExpensesTable = ({
         { name: "Expenses"},
         { name: "Payee"}, 
         {name: "Amount"},
-        {name: "Due Date"},
         {name: "Paid Date"},
         { name: "Action"}]
         
@@ -78,7 +77,6 @@ export const ExpensesTable = ({
                                         <td scope="row" className={td_classes}>
                                             {row.total_amount.toLocaleString()}
                                         </td>
-                                        <td className={td_classes}>{row.due_date}</td>
                                         <td className={td_classes}>{row.paid_date}</td>
                                         <td className="px-6 py-4">
                                             <a href="#"

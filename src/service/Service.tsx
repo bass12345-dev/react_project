@@ -4,6 +4,27 @@ import Swal from "sweetalert2";
 import { useState } from "react";
 
 
+
+
+// <!------------- Global Create Method -----------------!>
+export const DebexDBCreate = (table:any) => {
+
+  const Create = async (items: any) => {
+    const {data:result, error } = await supabase
+      .from(table)
+      .insert([items]);
+    return {result,error};
+  }
+
+  return { Create };
+}
+
+// <!------------- End -----------------!>
+
+
+
+
+
 // <!------------- Pay To Service -----------------!>
 export const getpayToItems = async () => {
   const { data: payToData, error } = await supabase.from(paytoDB).select().order('created_at', { ascending: false })
@@ -18,18 +39,7 @@ export const getpayToItems = async () => {
 
 // <!-------------Debt Service-----------------!>
 
-export const DebexDBCreate = (table:any) => {
-
-  const Create = async (items: any) => {
-    const {data:result, error } = await supabase
-      .from(table)
-      .insert([items]);
-    return {result,error};
-  }
-
-  return { Create };
-}
-
+//Update
 export const DebexDBUpdate = (table:any) => {
 
   const Update = async (items: any,id:any) => {
@@ -38,18 +48,12 @@ export const DebexDBUpdate = (table:any) => {
       .update([items])
       .eq('deb_exp_id', id);
     return {result,error};
-
-
-
-    
-  
-  
   }
 
   return { Update };
 }
 
-
+//Delete
 export const DebexDBDelete = () => {
 
   const Delete = async (id: any) => {
@@ -62,62 +66,6 @@ export const DebexDBDelete = () => {
   
   return { Delete };
 }
-
-export const  DebexDBDeleteAlert = (result:any,getDebt:any) => {
-  
-  
-  if(!result.error){
-    Swal.fire({
-      icon: "success",
-      title: "Success",
-      text: "Data has been deleted successfully!",
-    });
-    getDebt();
-  }else{
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "Something went wrong! Contact Developer if Issue persist!",
-    });
-  }
-}
-
-export const DebexSwalLoader = () => {
-  Swal.fire({
-    title: "Removing Data",
-    html: "",
-    timer: 2000,
-    timerProgressBar: true,
-    didOpen: () => {
-      Swal.showLoading();
-    },
-   
-  })
-}
-
-
-export const getDateSelectedType = async (debexSelectedType: any,_date:any) => {
-
-      let date = null;
-        switch (debexSelectedType) {
-            case debex_type[0] :
-                date = _date;
-                break;
-            case debex_type[1] :
-                date = _date;
-                break;
-            case debex_type[2] :
-                date = _date;
-                break;
-            default:
-                date = null
-                break;
-        }
-
-      return date;
-
-}
-
 
 
 export const getDebexItems = async (params: any) => {
@@ -161,6 +109,85 @@ export const getDebexItem = async (params: any) => {
     return debtData;
   }
 }
+
+
+
+
+
+
+
+
+
+
+// <!------------- Swal Display -----------------!>
+
+export const  DebexDBDeleteAlert = (result:any,getDebt:any) => {
+  
+  
+  if(!result.error){
+    Swal.fire({
+      icon: "success",
+      title: "Success",
+      text: "Data has been deleted successfully!",
+    });
+    getDebt();
+  }else{
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "Something went wrong! Contact Developer if Issue persist!",
+    });
+  }
+}
+
+//Loader
+export const DebexSwalLoader = () => {
+  Swal.fire({
+    title: "Removing Data",
+    html: "",
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+   
+  })
+}
+
+// <!------------- End-----------------!>
+
+
+
+
+
+
+// <!------------- Date Selected Type -----------------!>
+export const getDateSelectedType = async (debexSelectedType: any,_date:any) => {
+
+      let due_date = null;
+      let paid_date = null;
+      let acquired_date = null;
+
+      switch (debexSelectedType) {
+            case debex_type[0] :
+                acquired_date = _date;
+                break;
+            case debex_type[1] :
+                paid_date = _date;
+                break;
+            case debex_type[2] :
+                due_date = _date;
+                break;
+        }
+
+      return {due_date,paid_date,acquired_date};
+
+}
+
+// <!------------- End-----------------!>
+
+
+
 
 
 export const getCurrentDate = () => {
