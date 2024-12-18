@@ -199,3 +199,15 @@ export const getCurrentDate = () => {
   return year + '-' + month + '-' + day;
   // <!---------------- End---------------->
 }
+
+
+export const getCurrDate = () => {
+  // <!---------------- Get Current Date---------------->
+  const date  = new Date();
+  let day     = date.getDate();
+  let month   = date.getMonth();
+  let year    = date.getFullYear();
+  return {day,month,year};
+  // <!---------------- End---------------->
+}
+

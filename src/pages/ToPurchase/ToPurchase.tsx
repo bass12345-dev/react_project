@@ -19,7 +19,8 @@ export const ToPurchase = () => {
     const [openPurchasedModal, setOpenPurchasedModal] = useState(false); //Modals
     const [PurchasedItem, setPurchasedItem] = useState([]) //Modals
     const [to_purchased, setToPurchased] = useState<DebtItem[]>([]);//Debex Items
-    const [card_items, SetCardItems] = useState<CardItem[]>([]);
+    const [Total,setTotal] = useState('');
+
     
 
 
@@ -29,7 +30,11 @@ export const ToPurchase = () => {
         let debexItems = getDebexItems(params);
 
         if ((await debexItems).length > 0) {
-            setToPurchased(await getDebexItems(params));
+            let data = await getDebexItems(params)
+            setToPurchased(data);
+            let total = data.reduce((acc, item) => acc + item.total_amount, 0);
+            setTotal(total.toLocaleString(undefined, {minimumFractionDigits: 2}));
+
         } else {
             setToPurchased([]);
         }
@@ -53,6 +58,17 @@ export const ToPurchase = () => {
     }
 
     //   <!---------------------- END ----------------------!>
+
+
+    let card_items = [
+        {
+          title: 'Total',
+          amount: Total,
+          color: 'bg-red-800',
+          icon: 'fas fa-money-check-alt'
+        },
+
+      ]
 
 
       //<!---------------Object to Pass to Child Components, Ex. Modals----------------!>
