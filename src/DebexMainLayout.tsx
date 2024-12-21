@@ -10,8 +10,11 @@ import { UserWelcome } from "./components/UserWelcome";
 import { LogoutButton } from "./components/Layout/LogoutButton";
 import { MobileMenu, ToggleIcon } from "./components/Navigations/MobileMenu";
 import {  useLocation } from "react-router-dom";
+import Dashboard from "./pages/Dashboard/Dashboard";
+
 function DebexMainLayout() {
   let location_path = useLocation(); 
+  console.log(location_path.pathname)
 
   const [isNavOpen, setIsNavOpen] = useState(false);
 
@@ -67,6 +70,8 @@ function DebexMainLayout() {
         </nav>
         {/* User Welcome */}
         <UserWelcome name={userName}/>
+          {/* Dashboard Display */}
+          { location_path.pathname === '/' && <Dashboard/>}
         <Outlet />
       </div>
 

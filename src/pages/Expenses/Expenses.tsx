@@ -17,8 +17,9 @@ function Expenses() {
   const [openModal, setOpenModal] = useState(false);
   const [totalExpenses, setTotalExpenses] = useState<any>('');
   const [thisMonthExpenses,setMonthExpenses] = useState<any>('');
-  let {day,month,year} = getCurrDate();
-  const [CurrMonthYear, setCurrMonthYear] = useState<any>(`${year}-${month}`);
+  let {day,Month,Year} = getCurrDate();
+  const [currMonth, setcurrMonth] = useState<any>(Month);
+  const [currYear, setcurrYear] = useState<any>(Year);
 
 
 
@@ -31,24 +32,26 @@ function Expenses() {
   }
    //<!--------------- End----------------!>
 
-   function _update(e:any){
-      const date_arr = e.target.value.split('-');
-
-      setCurrMonthYear(`${date_arr[0]}-${date_arr[1]}`);
-      getExpenses();
-   }
+  const updateExpenses = (e:any) => {
+    const date_arr = e.target.value.split('-');
+    setcurrMonth(parseInt(date_arr[1]));
+    setcurrYear(parseInt(date_arr[0]));
+    getExpenses(date_arr[1],date_arr[0]);
+  }
 
   
   //<!--------------- Get Expenses ----------------!>
-   const getExpenses = async () => {
-    let params = { debex_type: debex_type[1], order_by: 'paid_date' };
+   const getExpenses = async (currMonth:any,currYear:any) => {
+    
+    let params = { debex_type: debex_type[1], order_by: 'paid_date',month:currMonth,year : currYear };
     let debexItems = getDebexItems(params);
     if ((await debexItems).length > 0) {
       let data = await debexItems;   
       setExpenses(data);
+      
       // setExpenses(data.filter(item => new Date(item.paid_date).getMonth() === new Date(CurrMonthYear).getMonth() && new Date(item.paid_date).getFullYear() == new Date(CurrMonthYear).getFullYear()));
       setTotalExpenses(data.reduce((acc, curr) => acc + curr.total_amount, 0)); // Calculate total expenses
-      setMonthExpenses(data.filter(item => new Date(item.paid_date).getMonth() === new Date(CurrMonthYear).getMonth()  && new Date(item.paid_date).getFullYear() == new Date(CurrMonthYear).getFullYear()).reduce((acc, curr) => acc + curr.total_amount, 0)); // Calculate expenses for this month
+      setMonthExpenses(data.filter(item => new Date(item.paid_date).getMonth() === currMonth - 1 && new Date(item.paid_date).getFullYear() == currYear).reduce((acc, curr) => acc + curr.total_amount, 0)); // Calculate expenses for this month
       
     } else {
       setExpenses([]);
@@ -56,7 +59,7 @@ function Expenses() {
    }
  
    useEffect(() => {
-     getExpenses();
+     getExpenses(currMonth,currYear);
      
     
    }, []);
@@ -65,12 +68,6 @@ function Expenses() {
 
 
   let card_items = [
-    {
-      title: 'Total Expenses',
-      amount: totalExpenses.toLocaleString(undefined, {minimumFractionDigits: 2}),
-      color: 'bg-red-800',
-      icon: 'fas fa-money-check-alt'
-    },
     {
       title: 'This Month',
       amount: thisMonthExpenses.toLocaleString(undefined, {minimumFractionDigits: 2}),
@@ -107,7 +104,7 @@ function Expenses() {
          {/* Expenses Table */}
          <div className="card bg-debexLightBlue border rounded-lg h-auto md:w-2/3  w-full px-6 py-6">
             <div className="card-buttons flex justify-between">
-              <TextInput id="select_month" type="month" placeholder="Juan" defaultValue={CurrMonthYear}  onChange={(e) => _update(e)}  shadow />
+              <TextInput id="select_month" type="month" placeholder="Juan" defaultValue={`${currYear}-${currMonth}`} onChange={(e) =>updateExpenses(e)}   shadow />
               <Button className="bg-debexPrimary font-varela hover:bg-red-500  text-white hover:bg-red-500 rounded-full" onClick={ToggleModal} >Add New</Button>
             </div>
             <ExpensesTable expenses={expenses} getExpenses={getExpenses}/>
