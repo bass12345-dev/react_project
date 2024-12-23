@@ -70,9 +70,7 @@ export const DebexDBDelete = () => {
 
 export const getDebexItems = async (params: any) => {
 
-  const startOfMonth = `${params.year}-${params.month}-01`;
-const nextMonth = new Date(params.year, params.month, 1); // JS months are 0-indexed
-const startOfNextMonth = nextMonth.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
 
   const { data: debtData, error } = await supabase.from(debex).select(
     `
@@ -87,8 +85,7 @@ const startOfNextMonth = nextMonth.toISOString().split('T')[0]; // Format as YYY
       ${paytoDB}(first_name,last_name)
      `
   ).eq('type', params.debex_type)
-  .gte('paid_date', startOfMonth)
-  .lt('paid_date', startOfNextMonth)  // Correct date for next month
+  
   .order(params.order_by, { ascending: false })
   if (error) {
     return [];
@@ -96,6 +93,35 @@ const startOfNextMonth = nextMonth.toISOString().split('T')[0]; // Format as YYY
     return debtData;
   }
 }
+
+export const getDebexItemsByMonth = async (params: any) => {
+
+  const startOfMonth = `${params.year}-${params.month}-01`;
+  const nextMonth = new Date(params.year, params.month, 1); // JS months are 0-indexed
+  const startOfNextMonth = nextMonth.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  
+    const { data: debtData, error } = await supabase.from(debex).select(
+      `
+        deb_exp_id,
+        total_amount,
+        reason,
+        type,
+        payto_id,
+        due_date,
+        paid_date,
+        date_acquired,
+        ${paytoDB}(first_name,last_name)
+       `
+    ).eq('type', params.debex_type)
+    .gte('paid_date', startOfMonth)
+    .lt('paid_date', startOfNextMonth)  // Correct date for next month
+    .order(params.order_by, { ascending: false })
+    if (error) {
+      return [];
+    } else {
+      return debtData;
+    }
+  }
 
 export const getDebexItem = async (params: any) => {
   const { data: debtData, error } = await supabase.from(debex).select(

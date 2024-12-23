@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Cards } from "../../components/Cards"
 import { ExpensesTable } from "./expenses_components/ExpensesTable"
 import { DebtItem } from "../../utils/Types";
-import { getCurrDate, getDebexItems } from "../../service/Service";
+import { getCurrDate, getDebexItemsByMonth } from "../../service/Service";
 import { debex_type } from "../../utils/supabase";
 import { Button, TextInput } from "flowbite-react";
 import { DebexModal } from "../../components/Modals/DebexModal";
@@ -44,7 +44,7 @@ function Expenses() {
    const getExpenses = async (currMonth:any,currYear:any) => {
     
     let params = { debex_type: debex_type[1], order_by: 'paid_date',month:currMonth,year : currYear };
-    let debexItems = getDebexItems(params);
+    let debexItems = getDebexItemsByMonth(params);
     if ((await debexItems).length > 0) {
       let data = await debexItems;   
       setExpenses(data);
