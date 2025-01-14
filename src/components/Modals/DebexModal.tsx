@@ -7,35 +7,26 @@ import { crud_type, debex, debex_type, supabase } from "../../utils/supabase";
 import Swal from "sweetalert2";
 import Select from 'react-select';
 
-export const DebexModal = ({ openModal, ToggleModal, debexData,debexItem }: { openModal: any, ToggleModal: any, debexData: any, debexItem:any }) => {
+export const DebexModal = ({ 
+    payeesArr, 
+    openModal, 
+    ToggleModal, 
+    debexData,
+    debexItem 
+    }:{ 
+    payeesArr : any, 
+    openModal: any, 
+    ToggleModal: any, 
+    debexData: any, 
+    debexItem:any 
+}) => {
 
-    const [payees, setPayees] = useState([]);
+    const [payees, setPayees] = useState(payeesArr);
     const [loader, setLoader] = useState(false);
     const payee = useRef(null);
     const { Create } = DebexDBCreate(debex);
     
-    //<!------------------ Fetch Data Payees ---------------------!>
-
-    const getPayees = async() => {
-        let items_arr:any = [];
-        let payees = getpayToItems();
-        if((await payees).length > 0){
-        // Fetching data from the database and setting it to state
-            (await payees).forEach((item: any) => {
-                items_arr.push({ value: item.payto_id, label: item.first_name });
-            });
-            setPayees(items_arr);
-          }else{
-            setPayees([]); // Clear state if no data
-          }
-        }
-      
-      useEffect(() => {
-        getPayees();
-      }, []);
-    
-    //<!--------------- End----------------!>
-    
+   
     
     //<!------------------ Insert Data ---------------------!>
     const {

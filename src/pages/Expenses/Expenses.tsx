@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Cards } from "../../components/Cards"
 import { ExpensesTable } from "./expenses_components/ExpensesTable"
 import { DebtItem } from "../../utils/Types";
-import { getCurrDate, getDebexItemsByMonth } from "../../service/Service";
+import { getCurrDate, getDebexItemsByMonth, getpayToItems } from "../../service/Service";
 import { debex_type } from "../../utils/supabase";
 import { Button, TextInput } from "flowbite-react";
 import { DebexModal } from "../../components/Modals/DebexModal";
+import { UpdateExpModal } from "./expenses_components/modals/UpdateExpModal";
 
 
 
@@ -13,14 +14,41 @@ function Expenses() {
 
 
    //<!--------------- Get Expenses----------------!>
-  const [expenses, setExpenses] = useState<DebtItem[]>([]);
-  const [openModal, setOpenModal] = useState(false);
-  const [totalExpenses, setTotalExpenses] = useState<any>('');
-  const [thisMonthExpenses,setMonthExpenses] = useState<any>('');
-  let {day,Month,Year} = getCurrDate();
-  const [currMonth, setcurrMonth] = useState<any>(Month);
-  const [currYear, setcurrYear] = useState<any>(Year);
+  const [expenses, setExpenses]               = useState<DebtItem[]>([]);
+  const [openModal, setOpenModal]             = useState(false);
+  const [openEditModal, setOpenEditModal]             = useState(false);
+  const [totalExpenses, setTotalExpenses]     = useState<any>('');
+  const [thisMonthExpenses,setMonthExpenses]  = useState<any>('');
+  let   {day,Month,Year}                      = getCurrDate();
+  const [currMonth, setcurrMonth]             = useState<any>(Month);
+  const [currYear, setcurrYear]               = useState<any>(Year);
 
+  const [ExpensesItem, setExpensesItem] = useState([]);
+  const [payeesArr, setPayees] = useState([]);
+
+
+    
+      //<!------------------ Fetch Data Payees ---------------------!>
+  
+      const getPayees = async() => {
+          let items_arr:any = [];
+          let payees = getpayToItems();
+          if((await payees).length > 0){
+          // Fetching data from the database and setting it to state
+              (await payees).forEach((item: any) => {
+                  items_arr.push({ value: item.payto_id, label: item.first_name });
+              });
+              setPayees(items_arr);
+            }else{
+              setPayees([]); // Clear state if no data
+            }
+          }
+        
+
+      
+      //<!--------------- End----------------!>
+      
+  
 
 
 
@@ -29,6 +57,10 @@ function Expenses() {
    //<!---------------Toggle Modal----------------!>
   const ToggleModal = () => {
     setOpenModal(!openModal);
+  }
+  const ToggleEditModal = (row:any) => {
+    setOpenEditModal(!openEditModal);
+    setExpensesItem(row)
   }
    //<!--------------- End----------------!>
 
@@ -60,6 +92,7 @@ function Expenses() {
  
    useEffect(() => {
      getExpenses(currMonth,currYear);
+     getPayees();
      
     
    }, []);
@@ -107,12 +140,38 @@ function Expenses() {
               <TextInput id="select_month" type="month" placeholder="Juan" defaultValue={`${currYear}-${currMonth}`} onChange={(e) =>updateExpenses(e)}   shadow />
               <Button className="bg-debexPrimary font-varela hover:bg-red-500  text-white hover:bg-red-500 rounded-full" onClick={ToggleModal} >Add New</Button>
             </div>
-            <ExpensesTable expenses={expenses} getExpenses={getExpenses}/>
+            <ExpensesTable 
+                          expenses={expenses} 
+                          getExpenses={getExpenses} 
+                          ToggleEditModal={ToggleEditModal} />
+
           </div>
         {/* End */}
-
       </div>
-      <DebexModal openModal={openModal} ToggleModal={ToggleModal} debexData={getExpenses} debexItem={debexItems} />
+      {
+        payeesArr.length > 0 &&
+
+        <UpdateExpModal 
+        openEditModal={openEditModal} 
+        ToggleEditModal={ToggleEditModal} 
+        ExpensesItem={ExpensesItem}
+        payeesArr={payeesArr} 
+         />
+      }
+
+      {
+        payeesArr.length > 0 &&
+
+        <DebexModal 
+                  openModal={openModal} 
+                  payeesArr={payeesArr} 
+                  ToggleModal={ToggleModal} 
+                  debexData={getExpenses} 
+                  debexItem={debexItems}/>
+      }
+    
+
+     
     </>
   )
 }

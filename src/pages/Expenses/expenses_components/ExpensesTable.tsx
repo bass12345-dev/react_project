@@ -6,13 +6,22 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { DebexModal } from "../../../components/Modals/DebexModal";
 import { DebexDBDelete, DebexDBDeleteAlert, DebexSwalLoader } from "../../../service/Service";
+import { UpdateExpModal } from "./modals/UpdateExpModal";
 
 export const ExpensesTable = ({ 
+ 
     expenses, 
-    getExpenses }
-    :{ 
+    getExpenses,
+    ToggleEditModal
+    }:{ 
+   
     expenses: any, 
-    getExpenses: any }) => {
+    getExpenses: any,
+    ToggleEditModal:any
+ 
+    }) => {
+
+   
 
     let table_headers   =  [
         { name: "Expenses"},
@@ -49,6 +58,10 @@ export const ExpensesTable = ({
         DebexDBDeleteAlert(result,getExpenses);
     }
 
+
+    
+
+  
     return (
         <>
             
@@ -80,7 +93,7 @@ export const ExpensesTable = ({
                                         <td className={td_classes}>{row.paid_date}</td>
                                         <td className="px-6 py-4">
                                             <a href="#"
-                                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-2">Edit</a>
+                                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-2" onClick={() => ToggleEditModal(row)} >Edit</a>
                                             <a href="#"
                                                 className="font-medium text-red-600 dark:text-red-500 hover:underline" onClick={()=>remove(row)}>Remove</a>
                                         </td>
@@ -91,7 +104,7 @@ export const ExpensesTable = ({
                         </tbody>
                     </table>
                 </div>
-           
+                
         </>
 
 

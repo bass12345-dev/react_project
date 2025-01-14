@@ -239,7 +239,7 @@ export const getCurrDate = () => {
   // <!---------------- Get Current Date---------------->
   const date  = new Date();
   let day     = date.getDate();
-  let Month   = date.getMonth() + 1;
+  let Month   =  date.getMonth() < 10 ? `0${date.getMonth() + 1}` :  date.getMonth() + 1 ;
   let Year    = date.getFullYear();
   return {day,Month,Year};  // <!---------------- End---------------->
 }

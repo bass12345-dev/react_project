@@ -95,9 +95,24 @@ export const ToPurchase = () => {
                     View Analytics
                 </a>
             </div>
-            <div className="card bg-debexLightBlue border rounded-lg h-auto   w-full px-6 py-6 mt-10">
+            <div className="card 
+                            bg-debexLightBlue 
+                            border 
+                            rounded-lg 
+                            h-auto   
+                            w-full 
+                            px-6 py-6 
+                            mt-10">
                 <div className="card-buttons flex justify-end">
-                    <Button className="bg-debexPrimary font-varela hover:bg-red-500  text-white hover:bg-red-500 rounded-full" onClick={ToggleModal}>Add New</Button>
+                    <Button className="bg-debexPrimary 
+                                        font-varela 
+                                        hover:bg-red-500  
+                                        text-white 
+                                        hover:bg-red-500 
+                                        rounded-full" 
+                                        onClick={ToggleModal}
+                                        >Add New
+                    </Button>
                 </div>
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
                   <ToPurchaseTable 
