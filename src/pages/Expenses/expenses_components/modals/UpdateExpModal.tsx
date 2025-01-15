@@ -1,30 +1,36 @@
-import { Label, Modal,Textarea, TextInput } from "flowbite-react";
+import { Button, Label, Modal, Spinner, Textarea, TextInput } from "flowbite-react";
 import { DebexInputs } from "../../../../utils/Types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
-import { getpayToItems } from "../../../../service/Service";
+import { DebexDBUpdate, getCurrDate, getpayToItems } from "../../../../service/Service";
 import Select from 'react-select';
 import Payto from "../../../PayTo/PayTo";
+import { debex } from "../../../../utils/supabase";
+import Swal from "sweetalert2";
 export const UpdateExpModal = ({
     openEditModal,
     ToggleEditModal,
     ExpensesItem,
-    payeesArr
+    payeesArr,
+    debexData,
+    setOpenEditModal
 }: {
     openEditModal: any,
     ToggleEditModal: any,
     ExpensesItem: any,
-    payeesArr: any
+    payeesArr: any[],
+    debexData : any,
+    setOpenEditModal : any
 }) => {
-    
+
 
     const defaultPayTo = { last_name: "Unknown", first_name: "Unknown" };
     const payTo = ExpensesItem.pay_to || defaultPayTo;
-
- 
-
+    let   {day,Month,Year}    = getCurrDate();
+    const [loader, setLoader] = useState(false);
     const [payees, setPayees] = useState(payeesArr);
     const payee = useRef(null);
+    const {Update} =  DebexDBUpdate(debex);
 
     //<!------------------ Insert Data ---------------------!>
     const {
@@ -37,10 +43,31 @@ export const UpdateExpModal = ({
 
     setValue('reason', ExpensesItem.reason);
     setValue('total_amount', ExpensesItem.total_amount);
-    // setValue('pay_to', ExpensesItem.payto_id);
+    setValue('date', ExpensesItem.paid_date);
 
     async function UpdateData(data: any) {
-        console.log(data)
+      
+        setLoader(true);
+        let items = {
+            total_amount    : parseFloat(data.total_amount),
+            payto_id        : payee.current || ExpensesItem.payto_id,
+            reason          : data.reason,
+            paid_date       : data.date
+        }
+
+        let result = await Update(items,ExpensesItem.deb_exp_id);
+
+        if(!result.error){
+            Swal.fire({icon: "success",title: "Success...",text: "Data Updated Successfully"});
+            reset(); 
+            let d = new Date();
+            debexData(Month, Year);
+            setOpenEditModal(false);
+        }else{
+            Swal.fire({icon: "error", title: "Failed...", text: "Failed to Add Data"});
+        }
+        
+        setLoader(false);
     }
 
 
@@ -72,8 +99,8 @@ export const UpdateExpModal = ({
                             <div className="mb-2 block">
                                 <Label htmlFor="pay_to" value="Pay to" />
                             </div>
-                             <Select id="pay_to" options={payees} defaultValue={{ label: payTo.first_name, value: ExpensesItem.payto_id }}  onChange={handleChange} />
-                             {/*  */}
+                            <Select id="pay_to" options={payees} defaultValue={{ label: payTo.first_name, value: ExpensesItem.payto_id }} onChange={handleChange} />
+                            {/*  */}
                         </div>
                         <div>
                             <div className="mb-2 block">
@@ -89,11 +116,14 @@ export const UpdateExpModal = ({
                             <TextInput id="date" type="date"   {...register("date")} required />
                         </div>
 
-{/* 
                         <div className="w-full flex justify-end">
-                            <Button type="submit" className="bg-debexPrimary hover:bg-red-500" disabled={loader} ><Spinner hidden={!loader} aria-label="Default status example" />{!loader ? 'Add' : ''}</Button>
-                        </div> */}
-
+                            <Button type="submit"
+                                className="bg-debexPrimary hover:bg-red-500"
+                                disabled={loader} >
+                                <Spinner hidden={!loader} aria-label="Default status example" />
+                                {!loader ? 'Update' : ''}
+                            </Button>
+                        </div>
                     </div>
                 </form>
 

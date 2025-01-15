@@ -1,7 +1,7 @@
 import { Button } from "flowbite-react"
 import { useEffect, useState } from "react";
 import { CardItem, DebtItem } from "../../utils/Types";
-import { DebexDBDelete, getCurrentDate, getDebexItems } from "../../service/Service";
+import { DebexDBDelete, getCurrentDate, getDebexItems, getPayees, getpayToItems } from "../../service/Service";
 import { debex, debex_type, supabase } from "../../utils/supabase";
 import { DebexModal } from "../../components/Modals/DebexModal";
 import withReactContent from "sweetalert2-react-content";
@@ -20,9 +20,19 @@ export const ToPurchase = () => {
     const [PurchasedItem, setPurchasedItem] = useState([]) //Modals
     const [to_purchased, setToPurchased] = useState<DebtItem[]>([]);//Debex Items
     const [Total,setTotal] = useState('');
-
+    const [payeesArr, setPayees] = useState(getPayees());
+    
     
 
+    
+    
+        
+          //<!------------------ Fetch Data Payees ---------------------!>
+      
+            
+    
+          
+          //<!--------------- End----------------!>
 
     // <!---------------- Get  Debex Items---------------->
     const getToPurchase = async () => {
@@ -127,6 +137,7 @@ export const ToPurchase = () => {
                     ToggleModal={ToggleModal} 
                     debexData={getToPurchase} 
                     debexItem={debexItems} 
+                    payeesArr={payeesArr} 
             />
             <PurchasedModal 
                     openModal={openPurchasedModal}  

@@ -28,11 +28,8 @@ export type DebtItem = {
       deb_exp_id: string;
       total_amount: number;
       payto_id : string;
-      // pay_to: any;
-      pay_to: Array<{
-        firs_name: string; // Replace with specific fields as needed
-        last_name: string; // Example additional field
-      }>;
+      pay_to: any;
+     
       reason: string;
       type: string;
       due_date: string;

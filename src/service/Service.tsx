@@ -147,6 +147,18 @@ export const getDebexItem = async (params: any) => {
 
 
 
+export const getPayees = async() => {
+  let items_arr:any = [];
+  let payees = getpayToItems();
+  if((await payees).length > 0){
+  // Fetching data from the database and setting it to state
+      (await payees).forEach((item: any) => {
+          items_arr.push({ value: item.payto_id, label: item.first_name });
+      });
+      
+    }
+  return items_arr;
+}
 
 
 

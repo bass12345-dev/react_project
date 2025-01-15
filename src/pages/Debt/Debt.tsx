@@ -4,10 +4,79 @@ import { useEffect } from 'react'
 import { Cards } from '../../components/Cards';
 import { DebtTable } from './debt_components/DebtTable';
 import { DebtItem } from '../../utils/Types';
-import { getDebexItems } from '../../service/Service';
+import { getDebexItems, getPayees } from '../../service/Service';
 import { Button } from 'flowbite-react';
 import { DebexModal } from '../../components/Modals/DebexModal';
 import { Logs } from './debt_components/Logs';
+
+import { useMemo } from 'react';
+
+import {
+  MantineReactTable,
+  useMantineReactTable,
+  type MRT_ColumnDef,
+} from 'mantine-react-table';
+
+
+const data: Person[] = [
+  {
+    name: {
+      firstName: 'Zachary',
+      lastName: 'Davis',
+    },
+    address: '261 Battle Ford',
+    city: 'Columbus',
+    state: 'Ohio',
+  },
+  {
+    name: {
+      firstName: 'Robert',
+      lastName: 'Smith',
+    },
+    address: '566 Brakus Inlet',
+    city: 'Westerville',
+    state: 'West Virginia',
+  },
+  {
+    name: {
+      firstName: 'Kevin',
+      lastName: 'Yan',
+    },
+    address: '7777 Kuhic Knoll',
+    city: 'South Linda',
+    state: 'West Virginia',
+  },
+  {
+    name: {
+      firstName: 'John',
+      lastName: 'Upton',
+    },
+    address: '722 Emie Stream',
+    city: 'Huntington',
+    state: 'Washington',
+  },
+  {
+    name: {
+      firstName: 'Nathan',
+      lastName: 'Harris',
+    },
+    address: '1 Kuhic Knoll',
+    city: 'Ohiowa',
+    state: 'Nebraska',
+  },
+];
+
+
+type Person = {
+  name: {
+    firstName: string;
+    lastName: string;
+  };
+  address: string;
+  city: string;
+  state: string;
+};
+
 
 
 
@@ -15,6 +84,7 @@ function Debt() {
   //<!---------------State Management----------------!>
   const [debt, setDebt] = useState<DebtItem[]>([]);
   const [openModal, setOpenModal] = useState(false);
+  const [payeesArr, setPayees] = useState(getPayees());
   //<!--------------- End----------------!>
 
    //<!---------------Toggle Modal----------------!>
@@ -57,6 +127,39 @@ function Debt() {
   //<!--------------- End----------------!>
 
 
+  const columns = useMemo<MRT_ColumnDef<Person>[]>(
+    () => [
+      {
+        accessorKey: 'name.firstName', //access nested data with dot notation
+        header: 'First Name',
+      },
+      {
+        accessorKey: 'name.lastName',
+        header: 'Last Name',
+      },
+      {
+        accessorKey: 'address', //normal accessorKey
+        header: 'Address',
+      },
+      {
+        accessorKey: 'city',
+        header: 'City',
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+      },
+    ],
+    [],
+  );
+
+
+  const table = useMantineReactTable({
+    columns,
+    data, //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
+  });
+
+
   return (
     <>
     
@@ -84,7 +187,10 @@ function Debt() {
             <div className="card-buttons flex justify-end">
               <Button className="bg-debexPrimary font-varela hover:bg-red-500  text-white hover:bg-red-500 rounded-full" onClick={ToggleModal} >Add New</Button>
             </div>
-            <DebtTable debt={debt} getDebt={getDebt} />
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
+              <MantineReactTable table={table} />
+            </div>
+            {/* <DebtTable debt={debt} getDebt={getDebt} /> */}
           </div>
         {/* End */}
         
@@ -92,7 +198,13 @@ function Debt() {
         <Logs />
         {/* End */}
       </div>
-      <DebexModal openModal={openModal} ToggleModal={ToggleModal} debexData={getDebt} debexItem={debexItems} />
+      <DebexModal 
+        openModal={openModal} 
+        ToggleModal={ToggleModal} 
+        debexData={getDebt} 
+        debexItem={debexItems}
+        payeesArr={payeesArr} 
+      />
     </>
   )
 }

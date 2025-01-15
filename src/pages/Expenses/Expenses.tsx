@@ -75,7 +75,14 @@ function Expenses() {
   //<!--------------- Get Expenses ----------------!>
    const getExpenses = async (currMonth:any,currYear:any) => {
     
-    let params = { debex_type: debex_type[1], order_by: 'paid_date',month:currMonth,year : currYear };
+    let params = { 
+      debex_type: debex_type[1], 
+      order_by: 'paid_date',
+      month: parseInt(currMonth),
+      year : currYear 
+    };
+
+    console.log(params)
     let debexItems = getDebexItemsByMonth(params);
     if ((await debexItems).length > 0) {
       let data = await debexItems;   
@@ -91,7 +98,7 @@ function Expenses() {
    }
  
    useEffect(() => {
-     getExpenses(currMonth,currYear);
+     getExpenses(Month,Year);
      getPayees();
      
     
@@ -156,6 +163,8 @@ function Expenses() {
         ToggleEditModal={ToggleEditModal} 
         ExpensesItem={ExpensesItem}
         payeesArr={payeesArr} 
+        debexData={getExpenses} 
+        setOpenEditModal = {setOpenEditModal}
          />
       }
 
