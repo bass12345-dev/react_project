@@ -1,81 +1,43 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react';
 import { debex_type } from '../../utils/supabase'
 import { useEffect } from 'react'
 import { Cards } from '../../components/Cards';
 import { DebtTable } from './debt_components/DebtTable';
 import { DebtItem } from '../../utils/Types';
 import { getDebexItems, getPayees } from '../../service/Service';
-import { Button } from 'flowbite-react';
+// import { Button } from 'flowbite-react';
 import { DebexModal } from '../../components/Modals/DebexModal';
 import { Logs } from './debt_components/Logs';
 
-import { useMemo } from 'react';
 
 import {
+  MRT_EditActionButtons,
   MantineReactTable,
-  useMantineReactTable,
+  // createRow,
   type MRT_ColumnDef,
+  type MRT_Row,
+  type MRT_TableOptions,
+  useMantineReactTable,
 } from 'mantine-react-table';
+import {
+  ActionIcon,
+  Button,
+  Flex,
+  Stack,
+  Text,
+  Title,
+  Tooltip,
+} from '@mantine/core';
+import { ModalsProvider, modals } from '@mantine/modals';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
-
-const data: Person[] = [
-  {
-    name: {
-      firstName: 'Zachary',
-      lastName: 'Davis',
-    },
-    address: '261 Battle Ford',
-    city: 'Columbus',
-    state: 'Ohio',
-  },
-  {
-    name: {
-      firstName: 'Robert',
-      lastName: 'Smith',
-    },
-    address: '566 Brakus Inlet',
-    city: 'Westerville',
-    state: 'West Virginia',
-  },
-  {
-    name: {
-      firstName: 'Kevin',
-      lastName: 'Yan',
-    },
-    address: '7777 Kuhic Knoll',
-    city: 'South Linda',
-    state: 'West Virginia',
-  },
-  {
-    name: {
-      firstName: 'John',
-      lastName: 'Upton',
-    },
-    address: '722 Emie Stream',
-    city: 'Huntington',
-    state: 'Washington',
-  },
-  {
-    name: {
-      firstName: 'Nathan',
-      lastName: 'Harris',
-    },
-    address: '1 Kuhic Knoll',
-    city: 'Ohiowa',
-    state: 'Nebraska',
-  },
-];
-
-
-type Person = {
-  name: {
-    firstName: string;
-    lastName: string;
-  };
-  address: string;
-  city: string;
-  state: string;
-};
 
 
 
@@ -84,6 +46,7 @@ function Debt() {
   //<!---------------State Management----------------!>
   const [debt, setDebt] = useState<DebtItem[]>([]);
   const [openModal, setOpenModal] = useState(false);
+  
   const [payeesArr, setPayees] = useState(getPayees());
   //<!--------------- End----------------!>
 
@@ -127,38 +90,6 @@ function Debt() {
   //<!--------------- End----------------!>
 
 
-  const columns = useMemo<MRT_ColumnDef<Person>[]>(
-    () => [
-      {
-        accessorKey: 'name.firstName', //access nested data with dot notation
-        header: 'First Name',
-      },
-      {
-        accessorKey: 'name.lastName',
-        header: 'Last Name',
-      },
-      {
-        accessorKey: 'address', //normal accessorKey
-        header: 'Address',
-      },
-      {
-        accessorKey: 'city',
-        header: 'City',
-      },
-      {
-        accessorKey: 'state',
-        header: 'State',
-      },
-    ],
-    [],
-  );
-
-
-  const table = useMantineReactTable({
-    columns,
-    data, //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
-  });
-
 
   return (
     <>
@@ -188,9 +119,9 @@ function Debt() {
               <Button className="bg-debexPrimary font-varela hover:bg-red-500  text-white hover:bg-red-500 rounded-full" onClick={ToggleModal} >Add New</Button>
             </div>
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-              <MantineReactTable table={table} />
+             
             </div>
-            {/* <DebtTable debt={debt} getDebt={getDebt} /> */}
+            <DebtTable debt={debt} getDebt={getDebt} />
           </div>
         {/* End */}
         

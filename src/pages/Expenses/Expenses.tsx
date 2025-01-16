@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Cards } from "../../components/Cards"
 import { ExpensesTable } from "./expenses_components/ExpensesTable"
 import { DebtItem } from "../../utils/Types";
-import { getCurrDate, getDebexItemsByMonth, getpayToItems } from "../../service/Service";
+import { getCurrDate, getDebexItemsByMonth, getPayees, getpayToItems } from "../../service/Service";
 import { debex_type } from "../../utils/supabase";
 import { Button, TextInput } from "flowbite-react";
 import { DebexModal } from "../../components/Modals/DebexModal";
@@ -24,25 +24,18 @@ function Expenses() {
   const [currYear, setcurrYear]               = useState<any>(Year);
 
   const [ExpensesItem, setExpensesItem] = useState([]);
-  const [payeesArr, setPayees] = useState([]);
-
+  const [payeesArr, setPayeesArr] = useState<Array<{ value: string; label: string }>>([]);
 
     
-      //<!------------------ Fetch Data Payees ---------------------!>
-  
-      const getPayees = async() => {
-          let items_arr:any = [];
-          let payees = getpayToItems();
-          if((await payees).length > 0){
-          // Fetching data from the database and setting it to state
-              (await payees).forEach((item: any) => {
-                  items_arr.push({ value: item.payto_id, label: item.first_name });
-              });
-              setPayees(items_arr);
-            }else{
-              setPayees([]); // Clear state if no data
+        //<!------------------ Fetch Data Payees ---------------------!>
+        const fetchPayees = async () => {
+        try {
+                const payees = await getPayees();
+                setPayeesArr(payees);
+            } catch (error) {
+                console.error('Error fetching payees:', error);
             }
-          }
+        };
         
 
       
@@ -99,7 +92,7 @@ function Expenses() {
  
    useEffect(() => {
      getExpenses(Month,Year);
-     getPayees();
+     fetchPayees();
      
     
    }, []);

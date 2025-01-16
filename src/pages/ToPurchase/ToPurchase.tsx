@@ -20,14 +20,21 @@ export const ToPurchase = () => {
     const [PurchasedItem, setPurchasedItem] = useState([]) //Modals
     const [to_purchased, setToPurchased] = useState<DebtItem[]>([]);//Debex Items
     const [Total,setTotal] = useState('');
-    const [payeesArr, setPayees] = useState(getPayees());
-    
-    
+    const [payeesArr, setPayeesArr] = useState<Array<{ value: string; label: string }>>([]);
+
 
     
     
         
-          //<!------------------ Fetch Data Payees ---------------------!>
+    //<!------------------ Fetch Data Payees ---------------------!>
+    const fetchPayees = async () => {
+    try {
+            const payees = await getPayees();
+            setPayeesArr(payees);
+        } catch (error) {
+            console.error('Error fetching payees:', error);
+        }
+    };
       
             
     
@@ -52,7 +59,8 @@ export const ToPurchase = () => {
     }
 
     useEffect(() => {
-      getToPurchase()
+      getToPurchase();
+      fetchPayees();
     }, []);
     // <!---------------- End---------------->
 

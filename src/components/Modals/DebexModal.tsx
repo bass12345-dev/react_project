@@ -20,8 +20,8 @@ export const DebexModal = ({
     debexData: any, 
     debexItem:any 
 }) => {
+ 
 
-    const [payees, setPayees] = useState(payeesArr);
     const [loader, setLoader] = useState(false);
     const payee = useRef(null);
     const { Create } = DebexDBCreate(debex);
@@ -91,7 +91,7 @@ export const DebexModal = ({
                             <div className="mb-2 block">
                                 <Label htmlFor="pay_to" value="Pay to" />
                             </div>
-                            <Select id="pay_to" options={payees} onChange={handleChange}     />
+                            <Select id="pay_to" options={payeesArr} onChange={handleChange}     />
                         </div>
 
                         <div>
